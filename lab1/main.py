@@ -6,16 +6,74 @@ from linear_equations import *
 def calculate_error(b, ans, n):
     s = 0
     for i in range(n):
-        s += fabs(b[i] - ans[i])
-    
+        s += abs(b[i] - ans[i])
+
     print('绝对误差:', s)
     print('相对误差:', s / sum(ans) * 100, '%')
+
+
+def calculate_remnant(A, B, x, n):
+    r = 0
+    for i in range(n):
+        s = 0
+        for j in range(n):
+            s += A[i * n + j] * x[j]
+        r += (s - B[i]) ** 2
+
+    print('残量:', sqrt(r))
+    print('相对残量:', sqrt(r) / sqrt(sum(i ** 2 for i in x)))
+
+
+def equation_1(n):
+    h = [0 for _ in range(n * n)]
+    b = [0 for _ in range(n)]
+
+    for i in range(n):
+        for j in range(n):
+            h[i * n + j] = 1 / (i + j + 1)
+            b[i] += h[i * n + j]
+
+    return h, b
+
+
+def equation_2(n):
+    g = [0 for _ in range(n * n)]
+    b = [0 for _ in range(n)]
+
+    for i in range(n):
+        g[i * n + n - 1] = 1
+        g[i * n + i] = 1
+
+        for j in range(i):
+            g[i * n + j] = -1
+
+    for i in range(n):
+        for j in range(n):
+            b[i] += g[i * n + j]
+
+    return g, b
+
+
+def equation_3(n):
+    g = [0 for _ in range(n * n)]
+
+    for i in range(n):
+        g[i * n + n - 1] = 1
+        g[i * n + i] = 1
+
+        for j in range(i):
+            g[i * n + j] = -1
+
+    b = list(range(2, n + 1)) + [n]
+
+    return g, b
+
 
 def main_1(n):
     print('n:', n)
 
-    h, b = hilbert(n)
-    pivot = [0 for _ in range(n)]
+    h, b = equation_1(n)
+    pivot = list(range(n))
 
     t = time()
     lu(h, pivot, n)
@@ -23,13 +81,14 @@ def main_1(n):
     t = time() - t
 
     print('-------------Gauss-------------')
-    print('b:', b)
+    print(pivot)
+    print('x:', b)
     print('用时:', t * 1000, 'ms')
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
     print()
 
-    h, b = hilbert(n)
+    h, b = equation_1(n)
     d = [0 for _ in range(n)]
 
     t = time()
@@ -38,23 +97,96 @@ def main_1(n):
     t = time() - t
 
     print('-------------Householder-------------')
-    print('b:', b)
+    print('x:', b)
     print('用时:', t * 1000, 'ms')
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
     print()
-    print('===============================')
+    print()
 
 
-def main_2():
-    pass
+def main_2(n):
+    print('n:', n)
+
+    h, b = equation_2(n)
+    pivot = list(range(n))
+
+    t = time()
+    lu(h, pivot, n)
+    gauss(h, pivot, b, n)
+    t = time() - t
+
+    print('-------------Gauss-------------')
+    print('x:', b)
+    print('用时:', t * 1000, 'ms')
+    ans = [1 for _ in range(n)]
+    calculate_error(b, ans, n)
+    print()
+
+    h, b = equation_2(n)
+    d = [0 for _ in range(n)]
+
+    t = time()
+    qr(h, d, n)
+    householder(h, d, b, n)
+    t = time() - t
+
+    print('-------------Householder-------------')
+    print('x:', b)
+    print('用时:', t * 1000, 'ms')
+    ans = [1 for _ in range(n)]
+    calculate_error(b, ans, n)
+    print()
+    print()
 
 
-def main_3():
-    pass
+def main_3(n):
+    print('n:', n)
+
+    h, b = equation_3(n)
+    pivot = list(range(n))
+
+    t = time()
+    lu(h, pivot, n)
+    gauss(h, pivot, b, n)
+    t = time() - t
+
+    print('-------------Gauss-------------')
+    print('x:', b)
+    print('用时:', t * 1000, 'ms')
+    H, B = equation_3(n)
+    calculate_remnant(H, B, b, n)
+    print()
+
+    h, b = equation_3(n)
+    d = [0 for _ in range(n)]
+
+    t = time()
+    qr(h, d, n)
+    householder(h, d, b, n)
+    t = time() - t
+
+    print('-------------Householder-------------')
+    print('x:', b)
+    print('用时:', t * 1000, 'ms')
+    H, B = equation_3(n)
+    calculate_remnant(H, B, b, n)
+    print()
+    print()
 
 
 if __name__ == '__main__':
+    print('==================实验1==================')
     main_1(5)
     main_1(10)
     main_1(15)
+
+    print('==================实验2==================')
+    main_2(10)
+    main_2(30)
+    main_2(60)
+
+    print('==================实验3==================')
+    main_3(10)
+    main_3(30)
+    main_3(60)

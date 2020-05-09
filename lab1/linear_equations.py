@@ -5,7 +5,7 @@
 @ide: Visual Studio Code
 @time: 2020-05-08
 """
-from math import fabs, sqrt
+from math import sqrt
 
 
 def lu(a, pivot, n):
@@ -19,12 +19,12 @@ def lu(a, pivot, n):
         return True
 
     for i in range(n - 1):
-        max_t = fabs(a[i * n + i])
+        max_t = abs(a[i * n + i])
         t = i
 
         for j in range(i + 1, n):
-            if fabs(a[j * n + i]) > max_t:
-                max_t = fabs(a[j * n + i])
+            if abs(a[j * n + i]) > max_t:
+                max_t = abs(a[j * n + i])
                 t = j
 
         if max_t == 0:
@@ -96,15 +96,15 @@ def qr(a, d, n):
         for j in range(i, n):
             a[j * n + i] /= t
 
-        for k in range(i + 1, n):
-            for j in range(i, n):
+        for j in range(i + 1, n):
+            for k in range(i, n):
                 t = 0
                 for l in range(i, n):
-                    t += (a[j * n + i] * a[l * n + i] * a[l * n + k])
-                temp[j] = a[j * n + k] - 2 * t
+                    t += (a[k * n + i] * a[l * n + i] * a[l * n + j])
+                temp[k] = a[k * n + j] - 2 * t
 
-            for j in range(i, n):
-                a[j * n + k] = temp[j]
+            for k in range(i, n):
+                a[k * n + j] = temp[k]
 
     d[n - 1] = a[(n - 1) * n + n - 1]
 
@@ -136,110 +136,45 @@ def householder(qr, d, b, n):
     return False
 
 
-def hilbert(n):
-    """生成希尔伯特矩阵方程组Hx=b
-    @param n: 矩阵维数
-    @return: h, b
-    """
-    h = [0 for _ in range(n * n)]
-    b = [0 for _ in range(n)]
-
-    for i in range(n):
-        for j in range(n):
-            h[i * n + j] = 1 / (i + j + 1)
-            b[i] += h[i * n + j]
-
-    return h, b
-
-
-def ouput(a, n):
+def output(a, n):
     for i in range(n):
         for j in range(n):
             print('{:.6f}'.format(a[i * n + j]), end='\t')
         print()
 
 
-def test_lu():
+def test():
     n = 4
-    a = [1, 2, 15/4, 0,
+    A = [1, 2, 15/4, 0,
          3, 7, 1, 0,
          2, 6, 0, 2,
          1, 5, 5, -5]
-    pivot = list(range(n))
+    pivot = list(range(4))
 
-    lu(a, pivot, n)
-
-    ouput(a, n)
+    print('==========Test LU Function==========')
+    lu(A, pivot, n)
+    output(A, n)
+    # 3.000000        7.000000        1.000000        0.000000
+    # 0.333333        2.666667        4.666667        -5.000000
+    # 0.333333        -0.125000       4.000000        -0.625000
+    # 0.666667        0.500000        -0.750000       4.031250
     print(pivot)
+    # [1, 3, 3, 3]
 
-    print('-------------------')
-
-    n = 6
-    a, b = hilbert(n)
-    pivot = list(range(n))
-
-    lu(a, pivot, n)
-
-    ouput(a, n)
-    print(pivot)
-
-
-def test_gauss():
     n = 4
-    a = [1, 2, 0, 0,
+    A = [1, 2, 0, 0,
          3, 7, 1, 0,
          2, 6, 0, 2,
          1, 5, 5, -5]
     b = [3, 11, 10, 6]
-    pivot = list(range(n))
+    pivot = list(range(4))
 
-    lu(a, pivot, n)
-    gauss(a, pivot, b, n)
+    print('==========Test Gauss Function==========')
+    lu(A, pivot, n)
+    gauss(A, pivot, b, n)
     print(b)
-
-    n = 8
-    a, b = hilbert(n)
-    pivot = list(range(n))
-
-    lu(a, pivot, n)
-    gauss(a, pivot, b, n)
-    print(b)
-
-
-def test_qr():
-    n = 6
-    a, b = hilbert(n)
-    d = [0 for _ in range(n)]
-
-    qr(a, d, n)
-    ouput(a, n)
-    print(d)
-
-
-def test_household():
-    n = 6
-    a, b = hilbert(n)
-    d = [0 for _ in range(n)]
-
-    qr(a, d, n)
-    householder(a, d, b, n)
-    print(b)
-
-    n = 4
-    a = [1, 2, 0, 0,
-         3, 7, 1, 0,
-         2, 6, 0, 2,
-         1, 5, 5, -5]
-    b = [3, 11, 10, 6]
-    d = [0 for _ in range(n)]
-
-    qr(a, d, n)
-    householder(a, d, b, n)
-    print(b)
+    # [1.0000000000000009, 0.9999999999999993, 1.000000000000001, 1.0000000000000009]
 
 
 if __name__ == '__main__':
-    test_lu()
-    test_gauss()
-    test_qr()
-    test_household()
+    test()
