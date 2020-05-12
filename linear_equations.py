@@ -148,7 +148,7 @@ def norm(a, ord=2):
 def test_lu():
     print('==========Test LU==========')
 
-    print('==========Case 1==========')
+    print('----------Case 1----------')
     n = 4
     A = [1, 2, 15/4, 0,
          3, 7, 1, 0,
@@ -172,7 +172,7 @@ def test_lu():
 def test_gauss():
     print('==========Test Gauss==========')
 
-    print('==========Case 1==========')
+    print('----------Case 1----------')
     n = 4
     A = [1, 2, 0, 0,
          3, 7, 1, 0,
@@ -193,7 +193,7 @@ def test_gauss():
 def test_householder():
     print('==========Test Householder==========')
 
-    print('==========Case 1==========')
+    print('----------Case 1----------')
     n = 4
     A = [1, 2, 0, 0,
          3, 7, 1, 0,
@@ -214,7 +214,7 @@ def test_householder():
 def test_norm():
     print('==========Test Norm==========')
 
-    print('==========Case 1==========')
+    print('----------Case 1----------')
     a = [1, 2, -3]
     print(norm(a, 0))
     # 3
