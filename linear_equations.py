@@ -1,10 +1,3 @@
-"""
-@project: Numerical-and-Symbolic-Calculations
-@auther: jiahao Shen
-@file: linear_equations.py
-@ide: Visual Studio Code
-@time: 2020-05-08
-"""
 from math import sqrt
 
 
@@ -143,7 +136,19 @@ def output(a, n):
         print()
 
 
-def test():
+def norm(a, ord=2):
+    if ord == 0:
+        return max(abs(x) for x in a)
+    if ord == 1:
+        return sum(abs(x) for x in a)
+    if ord == 2:
+        return sqrt(sum(x ** 2 for x in a))
+
+
+def test_lu():
+    print('==========Test LU==========')
+
+    print('==========Case 1==========')
     n = 4
     A = [1, 2, 15/4, 0,
          3, 7, 1, 0,
@@ -151,7 +156,6 @@ def test():
          1, 5, 5, -5]
     pivot = list(range(4))
 
-    print('==========Test LU Function==========')
     lu(A, pivot, n)
     output(A, n)
     # 3.000000        7.000000        1.000000        0.000000
@@ -161,6 +165,14 @@ def test():
     print(pivot)
     # [1, 3, 3, 3]
 
+    print()
+    print()
+
+
+def test_gauss():
+    print('==========Test Gauss==========')
+
+    print('==========Case 1==========')
     n = 4
     A = [1, 2, 0, 0,
          3, 7, 1, 0,
@@ -169,12 +181,54 @@ def test():
     b = [3, 11, 10, 6]
     pivot = list(range(4))
 
-    print('==========Test Gauss Function==========')
     lu(A, pivot, n)
     gauss(A, pivot, b, n)
     print(b)
     # [1.0000000000000009, 0.9999999999999993, 1.000000000000001, 1.0000000000000009]
+    print()
+
+    print()
+
+
+def test_householder():
+    print('==========Test Householder==========')
+
+    print('==========Case 1==========')
+    n = 4
+    A = [1, 2, 0, 0,
+         3, 7, 1, 0,
+         2, 6, 0, 2,
+         1, 5, 5, -5]
+    b = [3, 11, 10, 6]
+    d = [0 for _ in range(n)]
+
+    qr(A, d, n)
+    householder(A, d, b, n)
+    print(b)
+    # [1.0000000000000162, 0.9999999999999915, 1.000000000000015, 1.0000000000000098]
+    print()
+
+    print()
+
+
+def test_norm():
+    print('==========Test Norm==========')
+
+    print('==========Case 1==========')
+    a = [1, 2, -3]
+    print(norm(a, 0))
+    # 3
+    print(norm(a, 1))
+    # 6
+    print(norm(a, 2))
+    # 3.7416573867739413
+    print()
+    
+    print()
 
 
 if __name__ == '__main__':
-    test()
+    test_lu()
+    test_gauss()
+    test_norm()
+    test_householder()

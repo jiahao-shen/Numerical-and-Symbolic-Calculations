@@ -4,24 +4,23 @@ from linear_equations import *
 
 
 def calculate_error(b, ans, n):
-    s = 0
+    r = [0 for _ in range(n)]
     for i in range(n):
-        s += abs(b[i] - ans[i])
+        r[i] = b[i] - ans[i]
 
-    print('绝对误差:', s)
-    print('相对误差:', s / sum(ans) * 100, '%')
+    print('绝对误差:', norm(r, ord=1))
+    print('相对误差:', norm(r, ord=1) / sum(ans) * 100, '%')
 
 
 def calculate_remnant(A, B, x, n):
-    r = 0
+    r = [0 for _ in range(n)]
     for i in range(n):
-        s = 0
         for j in range(n):
-            s += A[i * n + j] * x[j]
-        r += (s - B[i]) ** 2
+            r[i] += A[i * n + j] * x[j]
+        r[i] -= B[i]
 
-    print('残量:', sqrt(r))
-    print('相对残量:', sqrt(r) / sqrt(sum(i ** 2 for i in x)))
+    print('残量:', norm(r))
+    print('相对残量:', norm(r) / norm(x))
 
 
 def equation_1(n):
