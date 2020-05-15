@@ -190,6 +190,19 @@ def test_gauss():
     print()
 
 
+# def test_qr():
+#     print('==========Test QR==========')
+
+#     print('----------Case 1----------')
+#     n = 3
+#     A = [12, -51, 4, 6, 167, -68, -4, 24, -41]
+#     d = [0 for _ in range(n)]
+
+#     qr(A, d, n)
+#     output(A, n)
+#     print(d)
+
+
 def test_householder():
     print('==========Test Householder==========')
 
@@ -210,7 +223,6 @@ def test_householder():
 
     print()
 
-
 def test_norm():
     print('==========Test Norm==========')
 
@@ -223,12 +235,14 @@ def test_norm():
     print(norm(a, 2))
     # 3.7416573867739413
     print()
-    
+
     print()
 
 
 if __name__ == '__main__':
     test_lu()
     test_gauss()
-    test_norm()
+    # test_qr()
     test_householder()
+    test_norm()
+
