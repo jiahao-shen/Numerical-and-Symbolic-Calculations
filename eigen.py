@@ -183,7 +183,9 @@ def test_power_eng():
     print('==========Test Power Eng==========')
     print('----------Case 1----------')
     n = 3
-    a = [-4, 14, 0, -5, 13, 0, -1, 0, 2]
+    a = [-4, 14, 0,
+         -5, 13, 0,
+         -1, 0, 2]
     pld = [0]
     env = [random() for _ in range(n)]
 
@@ -196,7 +198,10 @@ def test_power_eng():
 
     print('----------Case 2----------')
     n = 4
-    a = [2, 1, 0, 0, 1, 2, 1, 0, 0, 1, 2, 1, 0, 0, 1, 2]
+    a = [2, 1, 0, 0,
+         1, 2, 1, 0,
+         0, 1, 2, 1,
+         0, 0, 1, 2]
     pld = [0]
     env = [random() for _ in range(n)]
     power_eng(pld, env, a, n)
@@ -208,7 +213,9 @@ def test_power_eng():
 
     print('----------Case 3----------')
     n = 3
-    a = [2, -1, 0, 0, 2, -1, 0, -1, 2]
+    a = [2, -1, 0,
+         0, 2, -1,
+         0, -1, 2]
     pld = [0]
     env = [random() for _ in range(n)]
     power_eng(pld, env, a, n)
@@ -225,7 +232,9 @@ def test_inv_power_eng():
     print('==========Test Inv Power Eng==========')
     print('----------Case 1----------')
     n = 3
-    a = [2, -1, 0, -1, 2, -1, 0, -1, 2]
+    a = [2, -1, 0,
+         -1, 2, -1,
+         0, -1, 2]
     pld = [0]
     env = [random() for _ in range(n)]
     inv_power_eng(pld, env, a, n)
@@ -237,7 +246,9 @@ def test_inv_power_eng():
 
     print('----------Case 2----------')
     n = 3
-    a = [-4, 14, 0, -5, 13, 0, -1, 0, 2]
+    a = [-4, 14, 0,
+         -5, 13, 0,
+         -1, 0, 2]
     pld = [0]
     env = [random() for _ in range(n)]
     inv_power_eng(pld, env, a, n)
@@ -249,7 +260,9 @@ def test_inv_power_eng():
 
     print('----------Case 3----------')
     n = 3
-    a = [-1, 1, 0, -4, 3, 0, 1, 0, 2]
+    a = [-1, 1, 0,
+         -4, 3, 0,
+         1, 0, 2]
     pld = [0]
     env = [random() for _ in range(n)]
     inv_power_eng(pld, env, a, n)
@@ -277,7 +290,9 @@ def test_transpose():
     print('==========Test Transpose==========')
     print('----------Case 1----------')
     n = 3
-    a = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    a = [1, 2, 3,
+         4, 5, 6,
+         7, 8, 9]
     output(a, n)
     print()
     output(transpose(a, n), n)
@@ -290,7 +305,9 @@ def test_jacobi_eng():
     print('==========Test Jacobi Eng==========')
     print('----------Case 1----------')
     n = 3
-    a = [4, 2, 2, 2, 5, 1, 2, 1, 6]
+    a = [4, 2, 2,
+         2, 5, 1,
+         2, 1, 6]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -300,7 +317,10 @@ def test_jacobi_eng():
 
     print('----------Case 2----------')
     n = 4
-    a = [1, 1, 1, 1, 1, 2, 3, 4, 1, 3, 6, 10, 1, 4, 10, 20]
+    a = [1, 1, 1, 1,
+         1, 2, 3, 4,
+         1, 3, 6, 10,
+         1, 4, 10, 20]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -309,8 +329,10 @@ def test_jacobi_eng():
 
     print('----------Case 3----------')
     n = 4
-    a = [4, -30, 60, -35, -30, 300, -675, 420,
-         60, -675, 1620, -1050, -35, 420, -1050, 700]
+    a = [4, -30, 60, -35,
+         -30, 300, -675, 420,
+         60, -675, 1620, -1050,
+         -35, 420, -1050, 700]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -320,7 +342,9 @@ def test_jacobi_eng():
 
     print('----------Case 4----------')
     n = 3
-    a = [3.5, -6, 5, -6, 8.5, -9, 5, -9, 8.5]
+    a = [3.5, -6, 5,
+         -6, 8.5, -9,
+         5, -9, 8.5]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -330,7 +354,9 @@ def test_jacobi_eng():
 
     print('----------Case 5----------')
     n = 3
-    a = [6, 2, 4, 2, 3, 2, 4, 2, 6]
+    a = [6, 2, 4,
+         2, 3, 2,
+         4, 2, 6]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
