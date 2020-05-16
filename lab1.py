@@ -1,5 +1,4 @@
 from time import time
-from copy import deepcopy
 from linear_equations import *
 
 

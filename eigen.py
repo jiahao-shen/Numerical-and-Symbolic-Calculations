@@ -1,5 +1,4 @@
-from numpy import sign
-from copy import deepcopy
+import numpy as np
 from random import random
 from linear_equations import *
 from math import sqrt, atan, sin, cos, pi
@@ -24,12 +23,15 @@ def power_eng(pld, env, a, n):
         for i in range(n):
             env_new[i] /= l
 
-        if norm([env[i] - env_new[i] for i in range(n)]) <= 1e-6:
-            pld[0] = l
-            return False
+        # if norm([env[i] - env_new[i] for i in range(n)]) <= 1e-6:
+        #     print('fuck', _)
+            # pld[0] = l
+            # return False
 
         for i in range(n):
             env[i] = env_new[i]
+
+        pld[0] = l
 
     return True
 
@@ -47,8 +49,12 @@ def inv_power_eng(pld, env, a, n):
         env_new[i] = env[i]
 
     for _ in range(1000):
+        A = [0 for _ in range(n * n)]
+        for i in range(n):
+            for j in range(n):
+                A[i * n + j] = a[i * n + j]
+
         pivot = list(range(n))
-        A = deepcopy(a)
         lu(A, pivot, n)
         gauss(A, pivot, env_new, n)
 
@@ -57,12 +63,14 @@ def inv_power_eng(pld, env, a, n):
         for i in range(n):
             env_new[i] /= l
 
-        if norm([env[i] - env_new[i] for i in range(n)]) <= 1e-6:
-            pld[0] = 1 / l
-            return False
+        # if norm([env[i] - env_new[i] for i in range(n)]) <= 1e-6:
+        # pld[0] = 1 / l
+        # return False
 
         for i in range(n):
             env[i] = env_new[i]
+
+        pld[0] = 1 / l
 
     return True
 
@@ -91,57 +99,41 @@ def jacobi_eng(env, a, n):
         else:
             theta = atan(2 * a[x * n + y] / (a[x * n + x] - a[y * n + y])) / 2
 
-        P = rotation_matrix(x, y, theta, n)
-        PT = transpose(P, n)
-
-        # A * P
-        temp = [0 for _ in range(n * n)]
+        a_new = [0 for _ in range(n * n)]
         for i in range(n):
             for j in range(n):
-                for k in range(n):
-                    temp[i * n + j] += (a[i * n + k] * P[k * n + j])
+                a_new[i * n + j] = a[i * n + j]
 
-        # PT * A * P
-        new_a = [0 for _ in range(n * n)]
-        for i in range(n):
-            for j in range(n):
-                for k in range(n):
-                    new_a[i * n + j] += (PT[i * n + k] * temp[k * n + j])
-
-        if norm([a[i] - new_a[i] for i in range(n * n)]) < 1e-6:
-            for i in range(n):
-                env[i] = a[i * n + i]
-            return False
+        a_new[x * n + x] = a[x * n + x] * (cos(theta) ** 2) + a[y * n + y] * (
+            sin(theta) ** 2) + 2 * a[x * n + y] * cos(theta) * sin(theta)
+        a_new[y * n + y] = a[x * n + x] * (sin(theta) ** 2) + a[y * n + y] * (
+            cos(theta) ** 2) - 2 * a[x * n + y] * cos(theta) * sin(theta)
+        a_new[x * n + y] = (a[y * n + y] - a[x * n + x]) * \
+            sin(2 * theta) / 2 + a[x * n + y] * cos(2 * theta)
+        a_new[y * n + x] = a_new[x * n + y]
 
         for i in range(n):
+            if i != x and i != y:
+                a_row = a_new[x * n + i]
+                a_col = a_new[y * n + i]
+                a_new[x * n + i] = a_row * cos(theta) + a_col * sin(theta)
+                a_new[i * n + x] = a_new[x * n + i]
+                a_new[y * n + i] = a_col * cos(theta) - a_row * sin(theta)
+                a_new[i * n + y] = a_new[y * n + i]
+
+        # if norm([a[i] - a_new[i] for i in range(n * n)]) < 1e-6:
+        #     for i in range(n):
+        #         env[i] = a[i * n + i]
+        #     return False
+
+        for i in range(n):
             for j in range(n):
-                a[i * n + j] = new_a[i * n + j]
+                a[i * n + j] = a_new[i * n + j]
+
+        for i in range(n):
+            env[i] = a[i * n + i]
 
     return True
-
-
-def rotation_matrix(i, j, theta, n):
-    P = [0 for _ in range(n * n)]
-
-    for k in range(n):
-        P[k * n + k] = 1
-
-    P[i * n + i] = cos(theta)
-    P[i * n + j] = -sin(theta)
-    P[j * n + i] = sin(theta)
-    P[j * n + j] = cos(theta)
-
-    return P
-
-
-def transpose(a, n):
-    T = deepcopy(a)
-
-    for i in range(n):
-        for j in range(i + 1, n):
-            T[i * n + j], T[j * n + i] = T[j * n + i], T[i * n + j]
-
-    return T
 
 
 def gauss_hessen(a, n):
@@ -275,32 +267,6 @@ def test_inv_power_eng():
     print()
 
 
-def test_rotation_matrix():
-    print('==========Test Rotation Matrix==========')
-    print('----------Case 1----------')
-    n = 4
-    P = rotation_matrix(1, 2, pi/3, n)
-    output(P, n)
-    print()
-
-    print()
-
-
-def test_transpose():
-    print('==========Test Transpose==========')
-    print('----------Case 1----------')
-    n = 3
-    a = [1, 2, 3,
-         4, 5, 6,
-         7, 8, 9]
-    output(a, n)
-    print()
-    output(transpose(a, n), n)
-    print()
-
-    print()
-
-
 def test_jacobi_eng():
     print('==========Test Jacobi Eng==========')
     print('----------Case 1----------')
@@ -366,8 +332,6 @@ def test_jacobi_eng():
 
 
 if __name__ == '__main__':
-    # test_power_eng()
-    # test_inv_power_eng()
-    # test_rotation_matrix()
-    # test_transpose()
+    test_power_eng()
+    test_inv_power_eng()
     test_jacobi_eng()
