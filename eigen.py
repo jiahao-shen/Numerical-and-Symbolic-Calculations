@@ -1,4 +1,5 @@
 import numpy as np
+from utils import *
 from random import random
 from linear_equations import *
 from math import sqrt, atan, sin, cos, pi
@@ -147,7 +148,7 @@ def gauss_hessen(a, n):
     return False
 
 
-class Complex(object):
+class Eigen(object):
 
     def __init__(self):
         pass
@@ -155,6 +156,34 @@ class Complex(object):
     def qr_aux(self, i, j):
         """
         """
+        if j - i <= 2:
+            for k in range(i, j):
+                self.en[k] = self.a[k * self.n + k]
+            return
+
+        for k in range(i + 1, j):
+            if self.a[k * self.n + k - 1] == 0:
+                self.qr_aux(i, k)
+                self.qr_aux(k, j)
+                return
+
+        A = np.zeros((j - i, j - i))
+        for x in range(j - i):
+            for y in range(j - i):
+                A[x, y] = self.a[(i + x) * self.n + (i + y)]
+
+        # TODO(Replace with own QR)
+        for _ in range(100):
+            q, r = np.linalg.qr(A)
+            A = np.dot(r, q)
+
+        for x in range(j - i):
+            for y in range(j - i):
+                self.a[(i + x) * self.n + (i + y)] = A[x, y]
+
+        for k in range(i, j):
+            self.en[k] = self.a[k * self.n + k]
+
         return False
 
     def qr_eng(self, result, h, m):
@@ -163,15 +192,6 @@ class Complex(object):
         self.en = result
 
         self.qr_aux(0, self.n)
-
-
-def norm(a, ord=2):
-    if ord == 0:
-        return max(abs(x) for x in a)
-    if ord == 1:
-        return sum(abs(x) for x in a)
-    if ord == 2:
-        return sqrt(sum(x ** 2 for x in a))
 
 
 def test_power_eng():
@@ -379,8 +399,25 @@ def test_gauss_hessen():
     print()
 
 
+def test_hessen_qr():
+    n = 3
+    A = [5, -3, 2,
+         6, -4, 4,
+         4, -4, 5]
+
+    gauss_hessen(A, n)
+    output(A, n)
+
+    eig = Eigen()
+    env = [0 for _ in range(n)]
+
+    eig.qr_eng(env, A, n)
+    print(env)
+
+
 if __name__ == '__main__':
     # test_power_eng()
     # test_inv_power_eng()
     # test_jacobi_eng()
-    test_gauss_hessen()
+    # test_gauss_hessen()
+    test_hessen_qr()

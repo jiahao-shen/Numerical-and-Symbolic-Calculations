@@ -41,6 +41,12 @@ def matrix_a():
     jacobi_eng(env, A, n)
     print(env)
 
+    gauss_hessen(A, n)
+    eig = Eigen()
+    env = [0 for _ in range(n)]
+    eig.qr_eng(env, A, n)
+    print(env)
+
 
 def matrix_b():
     n = 10
@@ -72,6 +78,12 @@ def matrix_b():
 
     env = [random() for _ in range(n)]
     jacobi_eng(env, B, n)
+    print(env)
+
+    gauss_hessen(B, n)
+    eig = Eigen()
+    env = [0 for _ in range(n)]
+    eig.qr_eng(env, B, n)
     print(env)
 
 
@@ -122,6 +134,11 @@ def matrix_c():
     jacobi_eng(env, C, n)
     print(env)
 
+    gauss_hessen(C, n)
+    eig = Eigen()
+    env = [0 for _ in range(n)]
+    eig.qr_eng(env, C, n)
+    print(env)
 
 def matrix_d():
     n = 20
@@ -152,6 +169,12 @@ def matrix_d():
 
     env = [random() for _ in range(n)]
     jacobi_eng(env, D, n)
+    print(env)
+
+    gauss_hessen(D, n)
+    eig = Eigen()
+    env = [0 for _ in range(n)]
+    eig.qr_eng(env, D, n)
     print(env)
 
 
@@ -189,6 +212,13 @@ def matrix_e():
     env = [random() for _ in range(n)]
     jacobi_eng(env, E, n)
     print(env)
+
+    gauss_hessen(E, n)
+    eig = Eigen()
+    env = [0 for _ in range(n)]
+    eig.qr_eng(env, E, n)
+    print(env)
+
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
+from utils import *
 from math import sqrt
 
 
@@ -69,6 +70,7 @@ def qr(a, d, n):
     @param n: 矩阵维数
     @return: Boolean
     """
+    # TODO(Rewrite)
     temp = [0 for _ in range(n)]
 
     for i in range(n - 1):
@@ -131,22 +133,6 @@ def householder(qr, d, b, n):
     return False
 
 
-def output(a, n):
-    for i in range(n):
-        for j in range(n):
-            print('{:.6f}'.format(a[i * n + j]), end='\t')
-        print()
-
-
-def norm(a, ord=2):
-    if ord == 0:
-        return max(abs(x) for x in a)
-    if ord == 1:
-        return sum(abs(x) for x in a)
-    if ord == 2:
-        return sqrt(sum(x ** 2 for x in a))
-
-
 def test_lu():
     print('==========Test LU==========')
 
@@ -192,17 +178,17 @@ def test_gauss():
     print()
 
 
-# def test_qr():
-#     print('==========Test QR==========')
+def test_qr():
+    print('==========Test QR==========')
 
-#     print('----------Case 1----------')
-#     n = 3
-#     A = [12, -51, 4, 6, 167, -68, -4, 24, -41]
-#     d = [0 for _ in range(n)]
+    print('----------Case 1----------')
+    n = 3
+    A = [12, -51, 4, 6, 167, -68, -4, 24, -41]
+    d = [0 for _ in range(n)]
 
-#     qr(A, d, n)
-#     output(A, n)
-#     print(d)
+    qr(A, d, n)
+    output(A, n)
+    print(d)
 
 
 def test_householder():
@@ -226,25 +212,8 @@ def test_householder():
     print()
 
 
-def test_norm():
-    print('==========Test Norm==========')
-
-    print('----------Case 1----------')
-    a = [1, 2, -3]
-    print(norm(a, 0))
-    # 3
-    print(norm(a, 1))
-    # 6
-    print(norm(a, 2))
-    # 3.7416573867739413
-    print()
-
-    print()
-
-
 if __name__ == '__main__':
-    test_lu()
-    test_gauss()
-    # test_qr()
-    test_householder()
-    test_norm()
+    # test_lu()
+    # test_gauss()
+    test_qr()
+    # test_householder()
