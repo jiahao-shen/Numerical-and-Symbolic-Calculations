@@ -69,40 +69,41 @@ def jacobi_eng(env, a, n):
     @return: Boolean
     """
     for _ in range(1000):
-        t, x, y = 0, -1, -1
+        t, t_i, t_j = 0, -1, -1
 
         for i in range(n):
             for j in range(n):
                 if i != j and abs(a[i * n + j]) > t:
                     t = abs(a[i * n + j])
-                    x, y = i, j
+                    t_i, t_j = i, j
 
         if t == 0:
             return True
 
-        if a[x * n + x] == a[y * n + y]:
+        if a[t_i * n + t_i] == a[t_j * n + t_j]:
             theta = pi / 4
         else:
-            theta = atan(2 * a[x * n + y] / (a[x * n + x] - a[y * n + y])) / 2
+            theta = atan(2 * a[t_i * n + t_j] /
+                         (a[t_i * n + t_i] - a[t_j * n + t_j])) / 2
 
         a_new = a[:]
 
-        a_new[x * n + x] = a[x * n + x] * (cos(theta) ** 2) + a[y * n + y] * (
-            sin(theta) ** 2) + 2 * a[x * n + y] * cos(theta) * sin(theta)
-        a_new[y * n + y] = a[x * n + x] * (sin(theta) ** 2) + a[y * n + y] * (
-            cos(theta) ** 2) - 2 * a[x * n + y] * cos(theta) * sin(theta)
-        a_new[x * n + y] = (a[y * n + y] - a[x * n + x]) * \
-            sin(2 * theta) / 2 + a[x * n + y] * cos(2 * theta)
-        a_new[y * n + x] = a_new[x * n + y]
+        a_new[t_i * n + t_i] = a[t_i * n + t_i] * (cos(theta) ** 2) + a[t_j * n + t_j] * (
+            sin(theta) ** 2) + 2 * a[t_i * n + t_j] * cos(theta) * sin(theta)
+        a_new[t_j * n + t_j] = a[t_i * n + t_i] * (sin(theta) ** 2) + a[t_j * n + t_j] * (
+            cos(theta) ** 2) - 2 * a[t_i * n + t_j] * cos(theta) * sin(theta)
+        a_new[t_i * n + t_j] = (a[t_j * n + t_j] - a[t_i * n + t_i]) * \
+            sin(2 * theta) / 2 + a[t_i * n + t_j] * cos(2 * theta)
+        a_new[t_j * n + t_i] = a_new[t_i * n + t_j]
 
         for i in range(n):
-            if i != x and i != y:
-                a_row = a_new[x * n + i]
-                a_col = a_new[y * n + i]
-                a_new[x * n + i] = a_row * cos(theta) + a_col * sin(theta)
-                a_new[i * n + x] = a_new[x * n + i]
-                a_new[y * n + i] = a_col * cos(theta) - a_row * sin(theta)
-                a_new[i * n + y] = a_new[y * n + i]
+            if i != t_i and i != t_j:
+                a_row = a_new[t_i * n + i]
+                a_col = a_new[t_j * n + i]
+                a_new[t_i * n + i] = a_row * cos(theta) + a_col * sin(theta)
+                a_new[i * n + t_i] = a_new[t_i * n + i]
+                a_new[t_j * n + i] = a_col * cos(theta) - a_row * sin(theta)
+                a_new[i * n + t_j] = a_new[t_j * n + i]
 
         for i in range(n):
             for j in range(n):
@@ -119,7 +120,31 @@ def gauss_hessen(a, n):
     @param a: 按行优先次序存放
     @param n: 矩阵维数
     """
-    pass
+    for k in range(1, n - 1):
+        i = k
+        for j in range(k + 1, n):
+            if abs(a[j * n + k - 1]) > abs(a[k * n + k - 1]):
+                i = j
+
+        temp = a[i * n + k - 1]
+
+        if temp == 0:
+            return True
+
+        if i != k:
+            for j in range(k - 1, n):
+                a[i * n + j], a[k * n + j] = a[k * n + j], a[i * n + j]
+            for j in range(n):
+                a[j * n + i], a[j * n + k] = a[j * n + k], a[j * n + i]
+        for i in range(k + 1, n):
+            m = a[i * n + k - 1] / temp
+            a[i * n + k - 1] = 0
+            for j in range(k, n):
+                a[i * n + j] -= m * a[k * n + j]
+            for j in range(n):
+                a[j * n + k] += m * a[j * n + i]
+
+    return False
 
 
 class Complex(object):
@@ -309,7 +334,53 @@ def test_jacobi_eng():
     print()
 
 
+def test_gauss_hessen():
+    print('==========Test Gauss Hessenberg==========')
+    print('----------Case 1----------')
+    n = 4
+    A = [9, 18, 9, -27,
+         18, 45, 0, -45,
+         9, 0, 126, 9,
+         -27, -45, 9, 135]
+
+    gauss_hessen(A, n)
+    output(A, n)
+    print()
+
+    print('----------Case 2----------')
+    n = 4
+    A = [54, 40, 10, 76,
+         47, 20, 94, 49,
+         26, 80, 94, 70,
+         3, 92, 83, 45]
+
+    gauss_hessen(A, n)
+    output(A, n)
+    print()
+
+    print('----------Case 3----------')
+    n = 3
+    A = [-149, -50, -154,
+         537, 180, 546,
+         -27, -9, -25]
+
+    gauss_hessen(A, n)
+    output(A, n)
+    print()
+
+    print('----------Case 4----------')
+    n = 3
+    A = [1, 3, 4,
+         3, 2, 1,
+         4, 1, 3]
+
+    gauss_hessen(A, n)
+    output(A, n)
+    print()
+
+
 if __name__ == '__main__':
-    test_power_eng()
-    test_inv_power_eng()
-    test_jacobi_eng()
+    # test_power_eng()
+    # test_inv_power_eng()
+    # test_jacobi_eng()
+    test_gauss_hessen()
