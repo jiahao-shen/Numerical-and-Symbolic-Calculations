@@ -13,11 +13,8 @@ def power_eng(pld, env, a, n):
     @param n: 矩阵维数
     @return: Boolean
     """
-    for _ in range(10):
-        env_new = [0 for _ in range(n)]
-        for i in range(n):
-            for j in range(n):
-                env_new[i] += (a[i * n + j] * env[j])
+    for _ in range(1000):
+        env_new = dot(a, env, n, n, 1)
 
         l = norm(env_new)
 
@@ -166,23 +163,38 @@ class Eigen(object):
                 self.qr_aux(i, k)
                 self.qr_aux(k, j)
                 return
-
-        A = np.zeros((j - i, j - i))
+         
+        A = [0 for _ in range((j - i) * (j - i))]
         for x in range(j - i):
             for y in range(j - i):
-                A[x, y] = self.a[(i + x) * self.n + (i + y)]
+                A[x * (j - i) + y] = self.a[(i + x) * self.n + (i + y)]
 
-        # TODO(Replace with own QR)
         for _ in range(100):
-            q, r = np.linalg.qr(A)
-            A = np.dot(r, q)
+            Q, R = self.qr(A, j - i)
+            A = dot(R, Q, j - i, j - i, j - i)
 
-        for x in range(j - i):
-            for y in range(j - i):
-                self.a[(i + x) * self.n + (i + y)] = A[x, y]
+        # for x in range(j - i):
+        #     for y in range(j - i):
+        #         self.a[(i + x) * self.n + (i + y)] = A[x * (j - i) + y]
 
+        # A = np.zeros((j - i, j - i))
+        # for x in range(j - i):
+        #     for y in range(j - i):
+        #         A[x, y] = self.a[(i + x) * self.n + (i + y)]
+
+        # # TODO(Replace with own QR)
+        # for _ in range(1000):
+        #     q, r = np.linalg.qr(A)
+        #     A = np.dot(r, q)
+
+        # for x in range(j - i):
+        #     for y in range(j - i):
+        #         self.a[(i + x) * self.n + (i + y)] = A[x, y]
+
+        # for k in range(i, j):
+        #     self.en[k] = self.a[k * self.n + k]
         for k in range(i, j):
-            self.en[k] = self.a[k * self.n + k]
+            self.en[k] = A[(k - i) * (j - i) + (k - i)]
 
         return False
 
@@ -192,6 +204,37 @@ class Eigen(object):
         self.en = result
 
         self.qr_aux(0, self.n)
+
+    def qr(self, A, n):
+        Q = identity(n)
+        R = A[:]
+
+        for i in range(n - 1):
+            x = []
+            for j in range(i, n):
+                x.append(R[j * n + i])
+
+            e = [0 for _ in x]
+            e[0] = norm(x)
+
+            u = []
+            for j in range(len(x)):
+                u.append(x[j] - e[j])
+
+            v = []
+            for j in range(len(u)):
+                v.append(u[j] / norm(u))
+
+            h = identity(n)
+            v2 = outer(v, v, len(v))
+            for j in range(len(v)):
+                for k in range(len(v)):
+                    h[(j + i) * n + k + i] -= 2 * v2[j * len(v) + k]
+
+            R = dot(h, R, n, n, n)
+            Q = dot(Q, h, n, n, n)
+        
+        return Q, R
 
 
 def test_power_eng():
@@ -364,7 +407,7 @@ def test_gauss_hessen():
          -27, -45, 9, 135]
 
     gauss_hessen(A, n)
-    output(A, n)
+    output(A, n, n)
     print()
 
     print('----------Case 2----------')
@@ -375,7 +418,7 @@ def test_gauss_hessen():
          3, 92, 83, 45]
 
     gauss_hessen(A, n)
-    output(A, n)
+    output(A, n, n)
     print()
 
     print('----------Case 3----------')
@@ -385,7 +428,7 @@ def test_gauss_hessen():
          -27, -9, -25]
 
     gauss_hessen(A, n)
-    output(A, n)
+    output(A, n, n)
     print()
 
     print('----------Case 4----------')
@@ -395,7 +438,7 @@ def test_gauss_hessen():
          4, 1, 3]
 
     gauss_hessen(A, n)
-    output(A, n)
+    output(A, n, n)
     print()
 
 
@@ -406,7 +449,7 @@ def test_hessen_qr():
          4, -4, 5]
 
     gauss_hessen(A, n)
-    output(A, n)
+    output(A, n, n)
 
     eig = Eigen()
     env = [0 for _ in range(n)]
@@ -416,8 +459,8 @@ def test_hessen_qr():
 
 
 if __name__ == '__main__':
-    # test_power_eng()
-    # test_inv_power_eng()
-    # test_jacobi_eng()
-    # test_gauss_hessen()
+    test_power_eng()
+    test_inv_power_eng()
+    test_jacobi_eng()
+    test_gauss_hessen()
     test_hessen_qr()

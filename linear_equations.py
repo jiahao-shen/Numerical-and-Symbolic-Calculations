@@ -70,7 +70,6 @@ def qr(a, d, n):
     @param n: 矩阵维数
     @return: Boolean
     """
-    # TODO(Rewrite)
     temp = [0 for _ in range(n)]
 
     for i in range(n - 1):
@@ -145,7 +144,7 @@ def test_lu():
     pivot = list(range(4))
 
     lu(A, pivot, n)
-    output(A, n)
+    output(A, n, n)
     # 3.000000        7.000000        1.000000        0.000000
     # 0.333333        2.666667        4.666667        -5.000000
     # 0.333333        -0.125000       4.000000        -0.625000
@@ -182,12 +181,36 @@ def test_qr():
     print('==========Test QR==========')
 
     print('----------Case 1----------')
+    # n = 3
+    # A = [12, -51, 4,
+    #      6, 167, -68,
+    #      -4, 24, -41]
+    # d = [0 for _ in range(n)]
+
+    # qr(A, d, n)
+    # output(A, n, n)
+    # print(d)
+
+    # print('----------Case 2----------')
+    # n = 4
+    # A = [5, -2, -5, -1,
+    #      1, 0, -3, 2,
+    #      0, 2, 2, -3,
+    #      0, 0, 1, -2]
+    # d = [0 for _ in range(n)]
+
+    # qr(A, d, n)
+    # output(A, n, n)
+    # print(d)
+
     n = 3
-    A = [12, -51, 4, 6, 167, -68, -4, 24, -41]
+    A = [0, 3, 1,
+         0, 4, -2,
+         2, 1, 1]
     d = [0 for _ in range(n)]
 
     qr(A, d, n)
-    output(A, n)
+    output(A, n, n)
     print(d)
 
 
