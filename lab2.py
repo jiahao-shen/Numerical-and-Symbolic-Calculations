@@ -156,7 +156,7 @@ def matrix_d():
 
 
 def matrix_e():
-    n = 20
+    n = 5
     E = np.zeros((n, n))
     for i in range(n):
         E[i, i] = 1
@@ -192,8 +192,18 @@ def matrix_e():
 
 
 if __name__ == '__main__':
-    # matrix_a()
-    # matrix_b()
-    # matrix_c()
-    # matrix_d()
+    print('Matrix A')
+    matrix_a()
+    print()
+    print('Matrix B')
+    matrix_b()
+    print()
+    print('Matrix C')
+    matrix_c()
+    print()
+    print('Matrix D')
+    matrix_d()
+    print()
+    print('Matrix E')
     matrix_e()
+    print()

@@ -26,7 +26,7 @@ def lu(a, pivot, n):
         for j in range(n):
             a[i * n + j], a[t * n + j] = a[t * n + j], a[i * n + j]
 
-        pivot[i] = t
+        pivot[i], pivot[t] = pivot[t], pivot[i]
 
         for j in range(i + 1, n):
             a[j * n + i] = a[j * n + i] / a[i * n + i]
@@ -45,8 +45,10 @@ def gauss(lu, p, b, n):
     @param n: 矩阵维数
     @return: Boolean
     """
-    for i in range(n - 1):
-        b[i], b[p[i]] = b[p[i]], b[i]
+    temp = b[:]
+
+    for i in range(n):
+        b[i] = temp[p[i]]
 
     for i in range(n):
         for j in range(i):
@@ -163,9 +165,9 @@ def test_lu():
     # 0.333333        -0.125000       4.000000        -0.625000
     # 0.666667        0.500000        -0.750000       4.031250
     print(pivot)
-    # [1, 3, 3, 3]
-
+    # [1, 3, 0, 2]
     print()
+
     print()
 
 
@@ -223,6 +225,7 @@ def test_householder():
 
     print()
 
+
 def test_norm():
     print('==========Test Norm==========')
 
@@ -245,4 +248,3 @@ if __name__ == '__main__':
     # test_qr()
     test_householder()
     test_norm()
-

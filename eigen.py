@@ -12,21 +12,16 @@ def power_eng(pld, env, a, n):
     @param n: 矩阵维数
     @return: Boolean
     """
-    for _ in range(1000):
+    for _ in range(10):
         env_new = [0 for _ in range(n)]
         for i in range(n):
             for j in range(n):
-                env_new[i] += a[i * n + j] * env[j]
+                env_new[i] += (a[i * n + j] * env[j])
 
         l = norm(env_new)
 
         for i in range(n):
             env_new[i] /= l
-
-        # if norm([env[i] - env_new[i] for i in range(n)]) <= 1e-6:
-        #     print('fuck', _)
-            # pld[0] = l
-            # return False
 
         for i in range(n):
             env[i] = env_new[i]
@@ -44,17 +39,12 @@ def inv_power_eng(pld, env, a, n):
     @param n: 矩阵维数
     @return: Boolean
     """
-    env_new = [0 for _ in range(n)]
-    for i in range(n):
-        env_new[i] = env[i]
+    env_new = env[:]
 
     for _ in range(1000):
-        A = [0 for _ in range(n * n)]
-        for i in range(n):
-            for j in range(n):
-                A[i * n + j] = a[i * n + j]
-
+        A = a[:]
         pivot = list(range(n))
+
         lu(A, pivot, n)
         gauss(A, pivot, env_new, n)
 
@@ -62,10 +52,6 @@ def inv_power_eng(pld, env, a, n):
 
         for i in range(n):
             env_new[i] /= l
-
-        # if norm([env[i] - env_new[i] for i in range(n)]) <= 1e-6:
-        # pld[0] = 1 / l
-        # return False
 
         for i in range(n):
             env[i] = env_new[i]
@@ -99,10 +85,7 @@ def jacobi_eng(env, a, n):
         else:
             theta = atan(2 * a[x * n + y] / (a[x * n + x] - a[y * n + y])) / 2
 
-        a_new = [0 for _ in range(n * n)]
-        for i in range(n):
-            for j in range(n):
-                a_new[i * n + j] = a[i * n + j]
+        a_new = a[:]
 
         a_new[x * n + x] = a[x * n + x] * (cos(theta) ** 2) + a[y * n + y] * (
             sin(theta) ** 2) + 2 * a[x * n + y] * cos(theta) * sin(theta)
@@ -120,11 +103,6 @@ def jacobi_eng(env, a, n):
                 a_new[i * n + x] = a_new[x * n + i]
                 a_new[y * n + i] = a_col * cos(theta) - a_row * sin(theta)
                 a_new[i * n + y] = a_new[y * n + i]
-
-        # if norm([a[i] - a_new[i] for i in range(n * n)]) < 1e-6:
-        #     for i in range(n):
-        #         env[i] = a[i * n + i]
-        #     return False
 
         for i in range(n):
             for j in range(n):
@@ -260,8 +238,8 @@ def test_inv_power_eng():
     inv_power_eng(pld, env, a, n)
     print(pld)
     print(env)
-    # [1.0000000000013642]
-    # [0.0, 1.9073486328090306e-06, 0.999999999998181]
+    # [0.9990003761062305]
+    # [0.408452320847682, 0.8164965469326176, -0.4080442260849357]
     print()
 
     print()
@@ -327,7 +305,7 @@ def test_jacobi_eng():
 
     jacobi_eng(env, a, n)
     print(env)
-    # [10.999999999999998, 1.9999999999999998, 2.0]
+    # [11.0, 2.0, 1.9999999999999998]
     print()
 
 
