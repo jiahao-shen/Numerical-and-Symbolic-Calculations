@@ -181,27 +181,27 @@ def test_qr():
     print('==========Test QR==========')
 
     print('----------Case 1----------')
-    # n = 3
-    # A = [12, -51, 4,
-    #      6, 167, -68,
-    #      -4, 24, -41]
-    # d = [0 for _ in range(n)]
+    n = 3
+    A = [12, -51, 4,
+         6, 167, -68,
+         -4, 24, -41]
+    d = [0 for _ in range(n)]
 
-    # qr(A, d, n)
-    # output(A, n, n)
-    # print(d)
+    qr(A, d, n)
+    output(A, n, n)
+    print(d)
 
-    # print('----------Case 2----------')
-    # n = 4
-    # A = [5, -2, -5, -1,
-    #      1, 0, -3, 2,
-    #      0, 2, 2, -3,
-    #      0, 0, 1, -2]
-    # d = [0 for _ in range(n)]
+    print('----------Case 2----------')
+    n = 4
+    A = [5, -2, -5, -1,
+         1, 0, -3, 2,
+         0, 2, 2, -3,
+         0, 0, 1, -2]
+    d = [0 for _ in range(n)]
 
-    # qr(A, d, n)
-    # output(A, n, n)
-    # print(d)
+    qr(A, d, n)
+    output(A, n, n)
+    print(d)
 
     n = 3
     A = [0, 3, 1,
@@ -236,7 +236,7 @@ def test_householder():
 
 
 if __name__ == '__main__':
-    # test_lu()
-    # test_gauss()
+    test_lu()
+    test_gauss()
     test_qr()
-    # test_householder()
+    test_householder()

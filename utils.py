@@ -72,7 +72,7 @@ def test_outer():
     print('----------Case 1----------')
     n = 3
     a = [1, 2, 3]
-    output(outer(a, a, n), n)
+    output(outer(a, a, n), n, n)
     print()
 
     print()
@@ -96,6 +96,6 @@ def test_dot():
 
 
 if __name__ == '__main__':
-    # test_norm()
-    # test_outer()
+    test_norm()
+    test_outer()
     test_dot()

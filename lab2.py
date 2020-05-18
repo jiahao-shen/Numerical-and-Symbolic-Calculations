@@ -1,6 +1,6 @@
 import numpy as np
-from eigen import *
 from time import time
+from eigen_values import *
 
 
 def matrix_a():
@@ -178,25 +178,25 @@ def main_4(matrix, n):
 
 
 if __name__ == '__main__':
-    # print('==================实验1==================')
-    # print('矩阵A')
-    # main_1(*matrix_a())
-    # print('矩阵B')
-    # main_1(*matrix_b())
-    # print('矩阵C')
-    # main_1(*matrix_c())
-    # print('矩阵D')
-    # main_1(*matrix_d())
+    print('==================实验1==================')
+    print('矩阵A')
+    main_1(*matrix_a())
+    print('矩阵B')
+    main_1(*matrix_b())
+    print('矩阵C')
+    main_1(*matrix_c())
+    print('矩阵D')
+    main_1(*matrix_d())
 
-    # print('==================实验2==================')
-    # print('矩阵A')
-    # main_2(*matrix_a())
-    # print('矩阵B')
-    # main_2(*matrix_b())
-    # print('矩阵C')
-    # main_2(*matrix_c())
-    # print('矩阵D')
-    # main_2(*matrix_d())
+    print('==================实验2==================')
+    print('矩阵A')
+    main_2(*matrix_a())
+    print('矩阵B')
+    main_2(*matrix_b())
+    print('矩阵C')
+    main_2(*matrix_c())
+    print('矩阵D')
+    main_2(*matrix_d())
 
     print('==================实验3==================')
     print('矩阵A')
@@ -210,5 +210,5 @@ if __name__ == '__main__':
     print('矩阵E')
     main_3(*matrix_e())
 
-    # print('==================实验4==================')
-    # main_4(*matrix_f())
+    print('==================实验4==================')
+    main_4(*matrix_f())

@@ -1,6 +1,6 @@
 import numpy as np
 import sympy as sp
-from eigen import *
+from math import sqrt, sin, pi
 
 
 def matrix_a():
@@ -73,7 +73,7 @@ def matrix_d():
 
 
 def matrix_e():
-    n = 5
+    n = 50
     E = np.zeros((n, n))
     for i in range(n):
         E[i, i] = 1
