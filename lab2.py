@@ -1,4 +1,3 @@
-import numpy as np
 from time import time
 from eigen_values import *
 

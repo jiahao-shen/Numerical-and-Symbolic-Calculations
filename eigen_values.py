@@ -1,4 +1,3 @@
-import numpy as np
 from utils import *
 from random import random
 from linear_equations import *
