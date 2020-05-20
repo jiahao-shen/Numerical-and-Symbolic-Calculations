@@ -492,8 +492,8 @@ def test_hessen_qr():
 
 
 if __name__ == '__main__':
-    # test_power_eng()
-    # test_inv_power_eng()
+    test_power_eng()
+    test_inv_power_eng()
     test_jacobi_eng()
-    # test_gauss_hessen()
-    # test_hessen_qr()
+    test_gauss_hessen()
+    test_hessen_qr()

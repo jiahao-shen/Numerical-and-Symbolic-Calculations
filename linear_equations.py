@@ -203,6 +203,7 @@ def test_qr():
     output(A, n, n)
     print(d)
 
+    print('----------Case 3----------')
     n = 3
     A = [0, 3, 1,
          0, 4, -2,
