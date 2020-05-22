@@ -74,7 +74,7 @@ def jacobi_eng(env, a, n):
                     t = abs(a[i * n + j])
                     t_i, t_j = i, j
 
-        if t == 0:
+        if abs(t) < 1e-9:
             return True
 
         if a[t_i * n + t_i] == a[t_j * n + t_j]:
@@ -125,7 +125,7 @@ def gauss_hessen(a, n):
 
         temp = a[i * n + k - 1]
 
-        if temp == 0:
+        if abs(temp) < 1e-9:
             return True
 
         if i != k:
@@ -157,20 +157,25 @@ class Eigen(object):
                 self.en[k] = self.a[k * self.n + k]
             return
 
-        for k in range(i + 1, j):
-            if self.a[k * self.n + k - 1] == 0:
-                self.qr_aux(i, k)
-                self.qr_aux(k, j)
-                return
-
         A = [0 for _ in range((j - i) * (j - i))]
         for k in range(j - i):
             for l in range(j - i):
                 A[k * (j - i) + l] = self.a[(i + k) * self.n + (i + l)]
 
-        for _ in range(10):
+        for _ in range(100):
             Q, R = self.qr_solve(A, j - i)
             A = dot(R, Q, j - i, j - i, j - i)
+
+            for k in range(i + 1, j):
+                if abs(A[k * (j - i) + k - 1]) < 1e-9:
+                    for k in range(j - i):
+                        for l in range(j - i):
+                            self.a[(i + k) * self.n + (i + l)
+                                   ] = A[k * (j - i) + l]
+
+                    self.qr_aux(i, k)
+                    self.qr_aux(k, j)
+                    return False
 
         for k in range(i, j):
             self.en[k] = A[(k - i) * (j - i) + (k - i)]
@@ -210,37 +215,6 @@ class Eigen(object):
             Q = dot(Q, h, n, n, n)
 
         return Q, R
-
-    # def qr_solve(self, A, n):
-    #     Q = identity(n)
-    #     R = A[:]
-
-    #     for i in range(n - 1):
-    #         x = []
-    #         for j in range(i, n):
-    #             x.append(R[j * n + i])
-
-    #         e = [0 for _ in x]
-    #         e[0] = norm(x)
-
-    #         u = []
-    #         for j in range(len(x)):
-    #             u.append(x[j] - e[j])
-
-    #         v = []
-    #         for j in range(len(u)):
-    #             v.append(u[j] / norm(u))
-
-    #         h = identity(n)
-    #         v2 = outer(v, v, len(v))
-    #         for j in range(len(v)):
-    #             for k in range(len(v)):
-    #                 h[(j + i) * n + k + i] -= 2 * v2[j * len(v) + k]
-
-    #         R = dot(h, R, n, n, n)
-    #         Q = dot(Q, h, n, n, n)
-
-    #     return Q, R
 
 
 def test_power_eng():
@@ -460,7 +434,7 @@ def test_gauss_hessen():
 
 
 def test_hessen_qr():
-    print('==========Test Hessenberg QR==========')
+    print('==========Test QR Iteration==========')
     print('----------Case 1----------')
     n = 3
     A = [5, -3, 2,
@@ -474,6 +448,7 @@ def test_hessen_qr():
     eig = Eigen()
     eig.qr_eng(env, A, n)
     print(env)
+    # [3.0000000000000018, 1.9999999999999991, 1.0000000000000009]
     print()
 
     print('----------Case 2----------')
@@ -487,6 +462,7 @@ def test_hessen_qr():
     env = [0 for _ in range(n)]
     eig = Eigen()
     eig.qr_eng(env, A, n)
+    # [3.0000000000000018, 1.9999999999999991, 1.0000000000000016, 7.0, 5.0]
     print(env)
     print()
 

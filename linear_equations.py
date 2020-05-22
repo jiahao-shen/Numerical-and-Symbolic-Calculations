@@ -21,7 +21,7 @@ def lu(a, pivot, n):
                 max_t = abs(a[j * n + i])
                 t = j
 
-        if max_t == 0:
+        if abs(max_t) < 1e-9:
             return True
 
         for j in range(n):

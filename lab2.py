@@ -159,7 +159,7 @@ def main_3(matrix, n):
 
 
 def main_4(matrix, n):
-    print('-------------11次多项式-------------')
+    print('-------------QR-------------')
 
     M = matrix[:]
     env = [0 for _ in range(n)]
@@ -186,7 +186,9 @@ if __name__ == '__main__':
     main_1(*matrix_c())
     print('矩阵D')
     main_1(*matrix_d())
-
+    print('矩阵E')
+    main_1(*matrix_e())
+ 
     print('==================实验2==================')
     print('矩阵A')
     main_2(*matrix_a())
@@ -196,7 +198,7 @@ if __name__ == '__main__':
     main_2(*matrix_c())
     print('矩阵D')
     main_2(*matrix_d())
-
+ 
     print('==================实验3==================')
     print('矩阵A')
     main_3(*matrix_a())
@@ -210,4 +212,5 @@ if __name__ == '__main__':
     main_3(*matrix_e())
 
     print('==================实验4==================')
+    print('11次方程组')
     main_4(*matrix_f())
