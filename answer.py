@@ -16,9 +16,11 @@ def matrix_a():
 
     e, v = np.linalg.eig(A)
     e.sort()
-    print('All:', e)
-    print('Max:', max(abs(i) for i in e))
-    print('Min:', min(abs(i) for i in e))
+    print('All EigenValue:', e)
+    print('Max EigenValue(abs):', max(abs(i) for i in e))
+    print('Min EigenValue(abs):', min(abs(i) for i in e))
+    print('All EigenVector:')
+    print(v)
 
 
 def matrix_b():
@@ -31,9 +33,12 @@ def matrix_b():
 
     e, v = np.linalg.eig(B)
     e.sort()
-    print('All:', e)
-    print('Max:', max(abs(i) for i in e))
-    print('Min:', min(abs(i) for i in e))
+    print('All EigenValue:', e)
+    print('Max EigenValue(abs):', max(abs(i) for i in e))
+    print('Min EigenValue(abs):', min(abs(i) for i in e))
+    print('All EigenVector:')
+    print(v)
+
 
 
 def matrix_c():
@@ -53,9 +58,12 @@ def matrix_c():
 
     e, v = np.linalg.eig(C)
     e.sort()
-    print('All:', e)
-    print('Max:', max(abs(i) for i in e))
-    print('Min:', min(abs(i) for i in e))
+    print('All EigenValue:', e)
+    print('Max EigenValue(abs):', max(abs(i) for i in e))
+    print('Min EigenValue(abs):', min(abs(i) for i in e))
+    print('All EigenVector:')
+    print(v)
+
 
 
 def matrix_d():
@@ -67,9 +75,12 @@ def matrix_d():
 
     e, v = np.linalg.eig(D)
     e.sort()
-    print('All:', e)
-    print('Max:', max(abs(i) for i in e))
-    print('Min:', min(abs(i) for i in e))
+    print('All EigenValue:', e)
+    print('Max EigenValue(abs):', max(abs(i) for i in e))
+    print('Min EigenValue(abs):', min(abs(i) for i in e))
+    print('All EigenVector:')
+    print(v)
+
 
 
 def matrix_e():
@@ -83,9 +94,12 @@ def matrix_e():
 
     e, v = np.linalg.eig(E)
     e.sort()
-    print('All:', e)
-    print('Max:', max(abs(i) for i in e))
-    print('Min:', min(abs(i) for i in e))
+    print('All EigenValue:', e)
+    print('Max EigenValue(abs):', max(abs(i) for i in e))
+    print('Min EigenValue(abs):', min(abs(i) for i in e))
+    print('All EigenVector:')
+    print(v)
+
 
 
 def matrix_f():
@@ -98,9 +112,11 @@ def matrix_f():
 
     e, v = np.linalg.eig(F)
     e.sort()
-    print('All:', e)
-    print('Max:', max(abs(i) for i in e))
-    print('Min:', min(abs(i) for i in e))
+    print('All EigenValue:', e)
+    print('Max EigenValue(abs):', max(abs(i) for i in e))
+    print('Min EigenValue(abs):', min(abs(i) for i in e))
+    print('All EigenVector:')
+    print(v)
 
     x = sp.Symbol('x')
     f = x ** 11 + x ** 10 + x ** 9 + x ** 8 + x ** 7 + x ** 6 + x ** 5 + x ** 4 + x ** 3 + x ** 2 + x + 1
@@ -108,22 +124,22 @@ def matrix_f():
 
     
 if __name__ == '__main__':
-    print('Matrix A')
-    matrix_a()
-    print()
-    print('Matrix B')
-    matrix_b()
-    print()
-    print('Matrix C')
-    matrix_c()
-    print()
-    print('Matrix D')
+    # print('Matrix A')
+    # matrix_a()
+    # print()
+    # print('Matrix B')
+    # matrix_b()
+    # print()
+    # print('Matrix C')
+    # matrix_c()
+    # print()
+    # print('Matrix D')
     matrix_d()
-    print()
-    print('Matrix E')
-    matrix_e()
-    print()
-    print('Matrix F')
-    matrix_f()
-    print()
+    # print()
+    # print('Matrix E')
+    # matrix_e()
+    # print()
+    # print('Matrix F')
+    # matrix_f()
+    # print()
 
