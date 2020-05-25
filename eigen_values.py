@@ -1,6 +1,7 @@
 from utils import *
 from random import random
 from linear_equations import *
+from cmath import sqrt as csqrt
 from math import sqrt, atan, sin, cos, pi
 
 
@@ -123,9 +124,9 @@ def gauss_hessen(a, n):
             if abs(a[j * n + k - 1]) > abs(a[k * n + k - 1]):
                 i = j
 
-        temp = a[i * n + k - 1]
+        t = a[i * n + k - 1]
 
-        if abs(temp) < 1e-9:
+        if abs(t) < 1e-9:
             return True
 
         if i != k:
@@ -134,7 +135,7 @@ def gauss_hessen(a, n):
             for j in range(n):
                 a[j * n + i], a[j * n + k] = a[j * n + k], a[j * n + i]
         for i in range(k + 1, n):
-            m = a[i * n + k - 1] / temp
+            m = a[i * n + k - 1] / t
             a[i * n + k - 1] = 0
             for j in range(k, n):
                 a[i * n + j] -= m * a[k * n + j]
@@ -152,30 +153,44 @@ class Eigen(object):
     def qr_aux(self, i, j):
         """
         """
-        if j - i <= 2:
-            for k in range(i, j):
-                self.en[k] = self.a[k * self.n + k]
+        if j - i == 1:
+            self.en[i] = self.a[i * self.n + i]
+            return
+
+        if j - i == 2:
+            a = self.a[i * self.n + i]
+            b = self.a[i * self.n + (i + 1)]
+            c = self.a[(i + 1) * self.n + i]
+            d = self.a[(i + 1) * self.n + (i + 1)]
+            delta = (a + d) ** 2 - 4 * (a * d - b * c)
+
+            if delta >= 0:
+                self.en[i] = (a + d + sqrt(delta)) / 2
+                self.en[i + 1] = (a + d - sqrt(delta)) / 2
+            else:
+                self.en[i] = (a + d + csqrt(delta)) / 2
+                self.en[i + 1] = (a + d - csqrt(delta)) / 2
             return
 
         A = [0 for _ in range((j - i) * (j - i))]
-        for k in range(j - i):
-            for l in range(j - i):
-                A[k * (j - i) + l] = self.a[(i + k) * self.n + (i + l)]
+        for x in range(j - i):
+            for y in range(j - i):
+                A[x * (j - i) + y] = self.a[(i + x) * self.n + (i + y)]
 
         for _ in range(100):
-            Q, R = self.qr_solve(A, j - i)
-            A = dot(R, Q, j - i, j - i, j - i)
-
             for k in range(i + 1, j):
                 if abs(A[k * (j - i) + k - 1]) < 1e-9:
-                    for k in range(j - i):
-                        for l in range(j - i):
-                            self.a[(i + k) * self.n + (i + l)
-                                   ] = A[k * (j - i) + l]
+                    for x in range(j - i):
+                        for y in range(j - i):
+                            self.a[(i + x) * self.n + (i + y)
+                                   ] = A[x * (j - i) + y]
 
                     self.qr_aux(i, k)
                     self.qr_aux(k, j)
                     return False
+
+            Q, R = self.qr_solve(A, j - i)
+            A = dot(R, Q, j - i, j - i, j - i)
 
         for k in range(i, j):
             self.en[k] = A[(k - i) * (j - i) + (k - i)]
@@ -456,14 +471,26 @@ def test_hessen_qr():
     A = [5, -5/3, 2, 4, 5,
          6, -4/3, 4, 5, 6,
          0, 2/9, 7/3, 6, 7,
-         0, 0, 0, 7, 8,
-         0, 0, 0, 0, 5]
+         0, 0, 0, 3, -2,
+         0, 0, 0, 4, -1]
 
     env = [0 for _ in range(n)]
     eig = Eigen()
     eig.qr_eng(env, A, n)
-    # [3.0000000000000018, 1.9999999999999991, 1.0000000000000016, 7.0, 5.0]
     print(env)
+    # [2.999999999999992, 2.000000001465689, 0.9999999985343235, (1+2j), (1-2j)]
+    print()
+
+    print('----------Case 3----------')
+    n = 2
+    A = [0, -1,
+         1, 0]
+
+    env = [0 for _ in range(n)]
+    eig = Eigen()
+    eig.qr_eng(env, A, n)
+    print(env)
+    # [1j, -1j]
     print()
 
 
