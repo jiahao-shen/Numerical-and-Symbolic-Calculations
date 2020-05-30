@@ -93,7 +93,7 @@ def test_outer():
 
 
 def test_multiply():
-    print('==========Test Dot==========')
+    print('==========Test Multiply==========')
 
     print('----------Case 1----------')
     a = [5, 2, 4,
