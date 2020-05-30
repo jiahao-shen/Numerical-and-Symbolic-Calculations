@@ -49,9 +49,11 @@ def dot(a, b, m, p, n):
     res = [0 for _ in range(m * n)]
 
     for i in range(m):
-        for j in range(n):
-            for k in range(p):
-                res[i * n + j] += a[i * p + k] * b[k * n + j]
+        for j in range(p):
+            if abs(a[i * p + j]) > 1e-9:
+                for k in range(n):
+                    if abs(b[j * n + k]) > 1e-9:
+                        res[i * n + k] += (a[i * p + j] * b[j * n + k])
 
     return res
 
@@ -108,6 +110,6 @@ def test_dot():
 
 
 if __name__ == '__main__':
-    test_norm()
-    test_outer()
+    # test_norm()
+    # test_outer()
     test_dot()
