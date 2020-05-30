@@ -20,7 +20,7 @@ def calculate_error(b, ans, n):
 
 def calculate_remnant(A, b, x, n):
     r = [0 for _ in range(n)]
-    Ax = dot(A, x, n, n, 1)
+    Ax = multiply(A, x, n, n, 1)
     for i in range(n):
         r[i] = Ax[i] - b[i]
 

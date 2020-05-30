@@ -45,7 +45,7 @@ def outer(a, b, n):
     return res
 
 
-def dot(a, b, m, p, n):
+def multiply(a, b, m, p, n):
     res = [0 for _ in range(m * n)]
 
     for i in range(m):
@@ -92,7 +92,7 @@ def test_outer():
     print()
 
 
-def test_dot():
+def test_multiply():
     print('==========Test Dot==========')
 
     print('----------Case 1----------')
@@ -104,7 +104,7 @@ def test_dot():
          1, 3,
          3, 2]
 
-    output(dot(a, b, 4, 3, 2), 4, 2)
+    output(multiply(a, b, 4, 3, 2), 4, 2)
     print()
     print()
 
@@ -112,4 +112,4 @@ def test_dot():
 if __name__ == '__main__':
     test_norm()
     test_outer()
-    test_dot()
+    test_multiply()

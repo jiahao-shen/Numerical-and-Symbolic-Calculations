@@ -20,7 +20,7 @@ def power_eng(pld, env, a, n):
     @return: Boolean
     """
     for _ in range(1000):
-        env_new = dot(a, env, n, n, 1)
+        env_new = multiply(a, env, n, n, 1)
 
         l = norm(env_new)
 
@@ -195,7 +195,7 @@ class Eigen(object):
                     return False
 
             Q, R = self.qr_solve(A, j - i)
-            A = dot(R, Q, j - i, j - i, j - i)
+            A = multiply(R, Q, j - i, j - i, j - i)
 
         for k in range(i, j):
             self.en[k] = A[(k - i) * (j - i) + (k - i)]
@@ -232,7 +232,7 @@ class Eigen(object):
                 for k in range(len(v)):
                     h[(j + i) * n + k + i] -= 2 * v2[j * len(v) + k]
 
-            Q = dot(Q, h, n, n, n)
+            Q = multiply(Q, h, n, n, n)
 
         return Q, R
 

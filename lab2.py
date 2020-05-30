@@ -86,7 +86,7 @@ def matrix_f():
 
 
 def calculate_error(M, e, v, n):
-    r = dot(M, v, n, n, 1)
+    r = multiply(M, v, n, n, 1)
     for i in range(n):
         r[i] -= (e * v[i])
 
