@@ -110,6 +110,6 @@ def test_dot():
 
 
 if __name__ == '__main__':
-    # test_norm()
-    # test_outer()
+    test_norm()
+    test_outer()
     test_dot()
