@@ -8,7 +8,7 @@ from math import sqrt, inf
 
 
 def output(a, m, n):
-    """输出矩阵
+    """打印矩阵
     @param a: 按行优先次序存放
     @param m: 矩阵行数
     @param n: 矩阵列数
