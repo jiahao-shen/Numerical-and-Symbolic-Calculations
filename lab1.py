@@ -91,9 +91,9 @@ def main_1(n):
 
     print(pivot)
     print('x:', b)
-    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
+    print('用时: %.5E ms' % (t * 1000))
     print()
 
     print('-------------Householder-------------')
@@ -107,9 +107,9 @@ def main_1(n):
     t = time() - t
 
     print('x:', b)
-    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
+    print('用时: %.5E ms' % (t * 1000))
     print()
     print()
 
@@ -128,9 +128,9 @@ def main_2(n):
     t = time() - t
 
     print('x:', b)
-    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
+    print('用时: %.5E ms' % (t * 1000))
     print()
 
     print('-------------Householder-------------')
@@ -144,9 +144,9 @@ def main_2(n):
     t = time() - t
 
     print('x:', b)
-    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
+    print('用时: %.5E ms' % (t * 1000))
     print()
     print()
 
@@ -165,9 +165,9 @@ def main_3(n):
     t = time() - t
 
     print('x:', b)
-    print('用时: %.5E ms' % (t * 1000))
     H, B = equation_3(n)
     calculate_remnant(H, B, b, n)
+    print('用时: %.5E ms' % (t * 1000))
     print()
 
     print('-------------Householder-------------')
@@ -181,9 +181,9 @@ def main_3(n):
     t = time() - t
 
     print('x:', b)
-    print('用时: %.5E ms' % (t * 1000))
     H, B = equation_3(n)
     calculate_remnant(H, B, b, n)
+    print('用时: %.5E ms' % (t * 1000))
     print()
     print()
 

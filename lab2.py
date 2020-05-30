@@ -90,7 +90,7 @@ def calculate_error(M, e, v, n):
     for i in range(n):
         r[i] -= (e * v[i])
 
-    print('误差: %.5E' % norm(r))
+    return norm(r)
 
 
 def main_1(matrix, n):
@@ -107,8 +107,8 @@ def main_1(matrix, n):
 
     print('最大特征值: %.5E' % pld[0])
     print('特征向量:', ['%.5E' % x for x in env])
-    print('用时: %.5E ms'% (t * 1000))
-    calculate_error(M, pld[0], env, n)
+    print('误差: %.5E' % calculate_error(M, pld[0], env, n))
+    print('用时: %.5E ms' % (t * 1000))
     print()
 
     print('-------------Inv Power-------------')
@@ -124,8 +124,8 @@ def main_1(matrix, n):
 
     print('最小特征值: %.5E' % pld[0])
     print('特征向量:', ['%.5E' % x for x in env])
+    print('误差: %.5E' % calculate_error(M, pld[0], env, n))
     print('用时: %.5E ms' % (t * 1000))
-    calculate_error(M, pld[0], env, n)
     print()
 
     print()
