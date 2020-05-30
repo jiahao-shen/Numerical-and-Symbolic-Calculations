@@ -122,6 +122,7 @@ def gauss_hessen(a, n):
     """用Gauss相似变换将矩阵转换为Hessenberg矩阵
     @param a: 按行优先次序存放
     @param n: 矩阵维数
+    @return: Boolean
     """
     for k in range(1, n - 1):
         i = k
@@ -156,7 +157,10 @@ class Eigen(object):
         pass
 
     def qr_aux(self, i, j):
-        """
+        """递归对子矩阵进行QR迭代
+        @param i: 子矩阵的左边界
+        @param j: 子矩阵的右边界
+        @return: Boolean
         """
         if j - i == 1:
             self.en[i] = self.a[i * self.n + i]
@@ -203,6 +207,12 @@ class Eigen(object):
         return False
 
     def qr_eng(self, result, h, m):
+        """驱动函数
+        @param result: 特征值
+        @param h: 上Hessenberg矩阵
+        @param m: 矩阵维数
+        @return: 
+        """
         self.a = h
         self.n = m
         self.en = result
@@ -210,28 +220,34 @@ class Eigen(object):
         self.qr_aux(0, self.n)
 
     def qr_solve(self, A, n):
-        d = [0 for _ in range(n)]
-
-        qr(A, d, n)
-
-        R = [0 for _ in range(n * n)]
-        for i in range(n):
-            R[i * n + i] = d[i]
-            for j in range(i + 1, n):
-                R[i * n + j] = A[i * n + j]
-
+        """对子矩阵进行QR分解
+        @param A: 按行优先次序存放
+        @param n: 矩阵维数
+        @return: Q, R
+        """
         Q = identity(n)
-        for i in range(n - 1):
-            h = identity(n)
-            v = []
-            for j in range(i, n):
-                v.append(A[j * n + i])
-            v2 = outer(v, v, len(v))
+        R = A[:]
 
+        for i in range(n - 1):
+            x = []
+            for j in range(i, n):
+                x.append(R[j * n + i])
+
+            u = x[:]
+            u[0] = u[0] - norm(x)
+
+            v = []
+            l = norm(u)
+            for j in range(len(u)):
+                v.append(u[j] / l)
+
+            h = identity(n)
+            v2 = outer(v, v)
             for j in range(len(v)):
                 for k in range(len(v)):
                     h[(j + i) * n + k + i] -= 2 * v2[j * len(v) + k]
 
+            R = multiply(h, R, n, n, n)
             Q = multiply(Q, h, n, n, n)
 
         return Q, R
@@ -496,6 +512,8 @@ def test_hessen_qr():
     eig.qr_eng(env, A, n)
     print(env)
     # [1j, -1j]
+    print()
+
     print()
 
 
