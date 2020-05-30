@@ -1,3 +1,10 @@
+"""
+@project: Numerical-and-Symbolic-Calculations
+@author: jiahao Shen
+@file: lab2.py
+@ide: Visual Studio Code
+"""
+import numpy as np
 from time import time
 from eigen_values import *
 
@@ -83,7 +90,7 @@ def calculate_error(M, e, v, n):
     for i in range(n):
         r[i] -= (e * v[i])
 
-    print('误差:', norm(r))
+    print('误差: %.5E' % norm(r))
 
 
 def main_1(matrix, n):
@@ -98,9 +105,9 @@ def main_1(matrix, n):
     power_eng(pld, env, M, n)
     t = time() - t
 
-    print('最大特征值:', pld[0])
-    print('特征向量:', env)
-    print('用时:', t * 1000, 'ms')
+    print('最大特征值: %.5E' % pld[0])
+    print('特征向量:', ['%.5E' % x for x in env])
+    print('用时: %.5E ms'% (t * 1000))
     calculate_error(M, pld[0], env, n)
     print()
 
@@ -115,9 +122,9 @@ def main_1(matrix, n):
     inv_power_eng(pld, env, M, n)
     t = time() - t
 
-    print('最小特征值:', pld[0])
-    print('特征向量:', env)
-    print('用时:', t * 1000, 'ms')
+    print('最小特征值: %.5E' % pld[0])
+    print('特征向量:', ['%.5E' % x for x in env])
+    print('用时: %.5E ms' % (t * 1000))
     calculate_error(M, pld[0], env, n)
     print()
 
@@ -133,10 +140,19 @@ def main_2(matrix, n):
     t = time()
     jacobi_eng(env, M, n)
     t = time() - t
-
     env.sort()
-    print('特征值:', env)
-    print('用时:', t * 1000, 'ms')
+
+    M = np.array(matrix).reshape(n, n)
+    e, v = np.linalg.eig(M)
+    e.sort()
+
+    r = [0 for _ in range(n)]
+    for i in range(n):
+        r[i] = env[i] - e[i]
+
+    print('特征向量:', ['%.5E' % x for x in env])
+    print('误差: %.5E' % norm(r))
+    print('用时: %.5E ms' % (t * 1000))
     print()
 
 
@@ -151,10 +167,19 @@ def main_3(matrix, n):
     eig = Eigen()
     eig.qr_eng(env, M, n)
     t = time() - t
+    env.sort(key=lambda x: (x.real, x.imag))
 
-    env.sort()
-    print('特征值:', env)
-    print('用时:', t * 1000, 'ms')
+    M = np.array(matrix).reshape(n, n)
+    e, v = np.linalg.eig(M)
+    e.sort()
+
+    r = [0 for _ in range(n)]
+    for i in range(n):
+        r[i] = env[i] - e[i]
+
+    print('特征向量:', ['%.5E+%.5Ei' % (x.real, x.imag) for x in env])
+    print('误差: %.5E' % norm(r))
+    print('用时: %.5E ms' % (t * 1000))
     print()
 
 
@@ -169,10 +194,10 @@ def main_4(matrix, n):
     eig = Eigen()
     eig.qr_eng(env, M, n)
     t = time() - t
-
     env.sort()
-    print('特征值:', env)
-    print('用时:', t * 1000, 'ms')
+
+    print('方程解:', ['%.5E' % x for x in env])
+    print('用时: %.5E ms' % (t * 1000))
     print()
 
 
@@ -186,8 +211,6 @@ if __name__ == '__main__':
     main_1(*matrix_c())
     print('矩阵D')
     main_1(*matrix_d())
-    print('矩阵E')
-    main_1(*matrix_e())
  
     print('==================实验2==================')
     print('矩阵A')

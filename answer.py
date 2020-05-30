@@ -1,3 +1,9 @@
+"""
+@project: Numerical-and-Symbolic-Calculations
+@author: jiahao Shen
+@file: answer.py
+@ide: Visual Studio Code
+"""
 import numpy as np
 import sympy as sp
 from math import sqrt, sin, pi

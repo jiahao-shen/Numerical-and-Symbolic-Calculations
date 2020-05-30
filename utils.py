@@ -1,10 +1,16 @@
+"""
+@project: Numerical-and-Symbolic-Calculations
+@author: jiahao Shen
+@file: utils.py
+@ide: Visual Studio Code
+"""
 from math import sqrt
 
 
 def output(a, m, n):
     for i in range(m):
         for j in range(n):
-            print('{:.6f}'.format(a[i * n + j]), end='\t')
+            print('%.5E' % a[i * n + j], end='\t')
         print()
 
 
@@ -14,7 +20,7 @@ def norm(a, ord=2):
     if ord == 1:
         return sum(abs(x) for x in a)
     if ord == 2:
-        return sqrt(sum(x ** 2 for x in a))
+        return sqrt(sum(abs(x) ** 2 for x in a))
 
 
 def transpose(a, n):
@@ -61,6 +67,12 @@ def test_norm():
     # 6
     print(norm(a, 2))
     # 3.7416573867739413
+    print()
+
+    print('----------Case 2----------')
+    a = [1+2j, 2+3j, -3+5j]
+    print(norm(a))
+    # 7.211102550927978
     print()
 
     print()

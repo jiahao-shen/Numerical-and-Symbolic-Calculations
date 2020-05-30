@@ -1,3 +1,9 @@
+"""
+@project: Numerical-and-Symbolic-Calculations
+@author: jiahao Shen
+@file: eigen_values.py
+@ide: Visual Studio Code
+"""
 from utils import *
 from random import random
 from linear_equations import *
@@ -67,41 +73,40 @@ def jacobi_eng(env, a, n):
     @return: Boolean
     """
     for _ in range(1000):
-        t, t_i, t_j = 0, -1, -1
+        t, p, q = 0, -1, -1
 
         for i in range(n):
             for j in range(n):
                 if i != j and abs(a[i * n + j]) > t:
                     t = abs(a[i * n + j])
-                    t_i, t_j = i, j
+                    p, q = i, j
 
         if abs(t) < 1e-9:
             return True
 
-        if a[t_i * n + t_i] == a[t_j * n + t_j]:
+        if a[p * n + p] == a[q * n + q]:
             theta = pi / 4
         else:
-            theta = atan(2 * a[t_i * n + t_j] /
-                         (a[t_i * n + t_i] - a[t_j * n + t_j])) / 2
+            theta = atan(2 * a[p * n + q] / (a[p * n + p] - a[q * n + q])) / 2
 
         a_new = a[:]
 
-        a_new[t_i * n + t_i] = a[t_i * n + t_i] * (cos(theta) ** 2) + a[t_j * n + t_j] * (
-            sin(theta) ** 2) + 2 * a[t_i * n + t_j] * cos(theta) * sin(theta)
-        a_new[t_j * n + t_j] = a[t_i * n + t_i] * (sin(theta) ** 2) + a[t_j * n + t_j] * (
-            cos(theta) ** 2) - 2 * a[t_i * n + t_j] * cos(theta) * sin(theta)
-        a_new[t_i * n + t_j] = (a[t_j * n + t_j] - a[t_i * n + t_i]) * \
-            sin(2 * theta) / 2 + a[t_i * n + t_j] * cos(2 * theta)
-        a_new[t_j * n + t_i] = a_new[t_i * n + t_j]
+        a_new[p * n + p] = a[p * n + p] * (cos(theta) ** 2) + a[q * n + q] * (
+            sin(theta) ** 2) + 2 * a[p * n + q] * cos(theta) * sin(theta)
+        a_new[q * n + q] = a[p * n + p] * (sin(theta) ** 2) + a[q * n + q] * (
+            cos(theta) ** 2) - 2 * a[p * n + q] * cos(theta) * sin(theta)
+        a_new[p * n + q] = (a[q * n + q] - a[p * n + p]) * \
+            sin(2 * theta) / 2 + a[p * n + q] * cos(2 * theta)
+        a_new[q * n + p] = a_new[p * n + q]
 
         for i in range(n):
-            if i != t_i and i != t_j:
-                a_row = a_new[t_i * n + i]
-                a_col = a_new[t_j * n + i]
-                a_new[t_i * n + i] = a_row * cos(theta) + a_col * sin(theta)
-                a_new[i * n + t_i] = a_new[t_i * n + i]
-                a_new[t_j * n + i] = a_col * cos(theta) - a_row * sin(theta)
-                a_new[i * n + t_j] = a_new[t_j * n + i]
+            if i != p and i != q:
+                a_row = a_new[p * n + i]
+                a_col = a_new[q * n + i]
+                a_new[p * n + i] = a_row * cos(theta) + a_col * sin(theta)
+                a_new[i * n + p] = a_new[p * n + i]
+                a_new[q * n + i] = a_col * cos(theta) - a_row * sin(theta)
+                a_new[i * n + q] = a_new[q * n + i]
 
         for i in range(n):
             for j in range(n):
@@ -177,16 +182,16 @@ class Eigen(object):
             for y in range(j - i):
                 A[x * (j - i) + y] = self.a[(i + x) * self.n + (i + y)]
 
-        for _ in range(100):
-            for k in range(i + 1, j):
+        for _ in range(50):
+            for k in range(1, j - i):
                 if abs(A[k * (j - i) + k - 1]) < 1e-9:
                     for x in range(j - i):
                         for y in range(j - i):
                             self.a[(i + x) * self.n + (i + y)
                                    ] = A[x * (j - i) + y]
 
-                    self.qr_aux(i, k)
-                    self.qr_aux(k, j)
+                    self.qr_aux(i, i + k)
+                    self.qr_aux(i + k, j)
                     return False
 
             Q, R = self.qr_solve(A, j - i)

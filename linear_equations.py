@@ -1,3 +1,9 @@
+"""
+@project: Numerical-and-Symbolic-Calculations
+@author: jiahao Shen
+@file: linear_equations.py
+@ide: Visual Studio Code
+"""
 from utils import *
 from math import sqrt
 

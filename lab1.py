@@ -1,3 +1,9 @@
+"""
+@project: Numerical-and-Symbolic-Calculations
+@author: jiahao Shen
+@file: lab1.py
+@ide: Visual Studio Code
+"""
 from utils import *
 from time import time
 from linear_equations import *
@@ -8,8 +14,8 @@ def calculate_error(b, ans, n):
     for i in range(n):
         r[i] = b[i] - ans[i]
 
-    print('绝对误差:', norm(r, ord=1))
-    print('相对误差:', norm(r, ord=1) / sum(ans) * 100, '%')
+    print('绝对误差: %.5E' % norm(r, ord=1))
+    print('相对误差: %.5E' % (norm(r, ord=1) / sum(ans)))
 
 
 def calculate_remnant(A, b, x, n):
@@ -18,8 +24,8 @@ def calculate_remnant(A, b, x, n):
     for i in range(n):
         r[i] = Ax[i] - b[i]
 
-    print('残量:', norm(r))
-    print('相对残量:', norm(r) / norm(x))
+    print('残量: %.5E' % norm(r))
+    print('相对残量: %.5E' % (norm(r) / norm(x)))
 
 
 def equation_1(n):
@@ -54,6 +60,7 @@ def equation_2(n):
 
 def equation_3(n):
     g = [0 for _ in range(n * n)]
+    b = [0 for _ in range(n)]
 
     for i in range(n):
         g[i * n + n - 1] = 1
@@ -62,7 +69,9 @@ def equation_3(n):
         for j in range(i):
             g[i * n + j] = -1
 
-    b = list(range(2, n + 1)) + [n]
+    for i in range(n):
+        for j in range(n):
+            b[i] += abs(g[i * n + j])
 
     return g, b
 
@@ -82,7 +91,7 @@ def main_1(n):
 
     print(pivot)
     print('x:', b)
-    print('用时:', t * 1000, 'ms')
+    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
     print()
@@ -98,7 +107,7 @@ def main_1(n):
     t = time() - t
 
     print('x:', b)
-    print('用时:', t * 1000, 'ms')
+    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
     print()
@@ -119,7 +128,7 @@ def main_2(n):
     t = time() - t
 
     print('x:', b)
-    print('用时:', t * 1000, 'ms')
+    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
     print()
@@ -135,7 +144,7 @@ def main_2(n):
     t = time() - t
 
     print('x:', b)
-    print('用时:', t * 1000, 'ms')
+    print('用时: %.5E ms' % (t * 1000))
     ans = [1 for _ in range(n)]
     calculate_error(b, ans, n)
     print()
@@ -156,7 +165,7 @@ def main_3(n):
     t = time() - t
 
     print('x:', b)
-    print('用时:', t * 1000, 'ms')
+    print('用时: %.5E ms' % (t * 1000))
     H, B = equation_3(n)
     calculate_remnant(H, B, b, n)
     print()
@@ -172,7 +181,7 @@ def main_3(n):
     t = time() - t
 
     print('x:', b)
-    print('用时:', t * 1000, 'ms')
+    print('用时: %.5E ms' % (t * 1000))
     H, B = equation_3(n)
     calculate_remnant(H, B, b, n)
     print()
