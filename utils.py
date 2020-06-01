@@ -74,11 +74,11 @@ def multiply(a, b, m, p, n):
     res = [0 for _ in range(m * n)]
 
     for i in range(m):
-        for j in range(p):
-            if abs(a[i * p + j]) > 1e-9:
-                for k in range(n):
-                    if abs(b[j * n + k]) > 1e-9:
-                        res[i * n + k] += (a[i * p + j] * b[j * n + k])
+        for k in range(p):
+            if abs(a[i * p + k]) > 1e-9:
+                for j in range(n):
+                    if abs(b[k * n + j]) > 1e-9:
+                        res[i * n + j] += (a[i * p + k] * b[k * n + j])
 
     return res
 
