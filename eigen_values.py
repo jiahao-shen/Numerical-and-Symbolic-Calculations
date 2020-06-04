@@ -20,7 +20,7 @@ def power_eng(pld, env, a, n):
     @return: Boolean
     """
     for _ in range(1000):
-        env_new = multiply(a, env, n, n, 1)
+        env_new = dot(a, env)
 
         l = norm(env_new)
 
@@ -46,7 +46,7 @@ def inv_power_eng(pld, env, a, n):
     env_new = env[:]
 
     for _ in range(1000):
-        A = a[:]
+        A = [row[:] for row in a]
         pivot = list(range(n))
 
         lu(A, pivot, n)
@@ -77,43 +77,43 @@ def jacobi_eng(env, a, n):
 
         for i in range(n):
             for j in range(n):
-                if i != j and abs(a[i * n + j]) > t:
-                    t = abs(a[i * n + j])
+                if i != j and abs(a[i][j]) > t:
+                    t = abs(a[i][j])
                     p, q = i, j
 
         if abs(t) < 1e-9:
             return True
 
-        if a[p * n + p] == a[q * n + q]:
+        if a[p][p] == a[q][q]:
             theta = pi / 4
         else:
-            theta = atan(2 * a[p * n + q] / (a[p * n + p] - a[q * n + q])) / 2
+            theta = atan(2 * a[p][q] / (a[p][p] - a[q][q])) / 2
 
-        a_new = a[:]
+        a_new = [row[:] for row in a]
 
-        a_new[p * n + p] = a[p * n + p] * (cos(theta) ** 2) + a[q * n + q] * (
-            sin(theta) ** 2) + 2 * a[p * n + q] * cos(theta) * sin(theta)
-        a_new[q * n + q] = a[p * n + p] * (sin(theta) ** 2) + a[q * n + q] * (
-            cos(theta) ** 2) - 2 * a[p * n + q] * cos(theta) * sin(theta)
-        a_new[p * n + q] = (a[q * n + q] - a[p * n + p]) * \
-            sin(2 * theta) / 2 + a[p * n + q] * cos(2 * theta)
-        a_new[q * n + p] = a_new[p * n + q]
+        a_new[p][p] = a[p][p] * (cos(theta) ** 2) + a[q][q] * (
+            sin(theta) ** 2) + 2 * a[p][q] * cos(theta) * sin(theta)
+        a_new[q][q] = a[p][p] * (sin(theta) ** 2) + a[q][q] * (
+            cos(theta) ** 2) - 2 * a[p][q] * cos(theta) * sin(theta)
+        a_new[p][q] = (a[q][q] - a[p][p]) * \
+            sin(2 * theta) / 2 + a[p][q] * cos(2 * theta)
+        a_new[q][p] = a_new[p][q]
 
         for i in range(n):
             if i != p and i != q:
-                a_row = a_new[p * n + i]
-                a_col = a_new[q * n + i]
-                a_new[p * n + i] = a_row * cos(theta) + a_col * sin(theta)
-                a_new[i * n + p] = a_new[p * n + i]
-                a_new[q * n + i] = a_col * cos(theta) - a_row * sin(theta)
-                a_new[i * n + q] = a_new[q * n + i]
+                a_row = a_new[p][i]
+                a_col = a_new[q][i]
+                a_new[p][i] = a_row * cos(theta) + a_col * sin(theta)
+                a_new[i][p] = a_new[p][i]
+                a_new[q][i] = a_col * cos(theta) - a_row * sin(theta)
+                a_new[i][q] = a_new[q][i]
 
         for i in range(n):
             for j in range(n):
-                a[i * n + j] = a_new[i * n + j]
+                a[i][j] = a_new[i][j]
 
         for i in range(n):
-            env[i] = a[i * n + i]
+            env[i] = a[i][i]
 
     return True
 
@@ -127,26 +127,26 @@ def gauss_hessen(a, n):
     for k in range(1, n - 1):
         i = k
         for j in range(k + 1, n):
-            if abs(a[j * n + k - 1]) > abs(a[k * n + k - 1]):
+            if abs(a[j][k - 1]) > abs(a[k][k - 1]):
                 i = j
 
-        t = a[i * n + k - 1]
+        t = a[i][k - 1]
 
         if abs(t) < 1e-9:
             return True
 
         if i != k:
             for j in range(k - 1, n):
-                a[i * n + j], a[k * n + j] = a[k * n + j], a[i * n + j]
+                a[i][j], a[k][j] = a[k][j], a[i][j]
             for j in range(n):
-                a[j * n + i], a[j * n + k] = a[j * n + k], a[j * n + i]
+                a[j][i], a[j][k] = a[j][k], a[j][i]
         for i in range(k + 1, n):
-            m = a[i * n + k - 1] / t
-            a[i * n + k - 1] = 0
+            m = a[i][k - 1] / t
+            a[i][k - 1] = 0
             for j in range(k, n):
-                a[i * n + j] -= m * a[k * n + j]
+                a[i][j] -= m * a[k][j]
             for j in range(n):
-                a[j * n + k] += m * a[j * n + i]
+                a[j][k] += m * a[j][i]
 
     return False
 
@@ -163,14 +163,14 @@ class Eigen(object):
         @return: Boolean
         """
         if j - i == 1:
-            self.en[i] = self.a[i * self.n + i]
+            self.en[i] = self.a[i][i]
             return
 
         if j - i == 2:
-            a = self.a[i * self.n + i]
-            b = self.a[i * self.n + (i + 1)]
-            c = self.a[(i + 1) * self.n + i]
-            d = self.a[(i + 1) * self.n + (i + 1)]
+            a = self.a[i][i]
+            b = self.a[i][i + 1]
+            c = self.a[i + 1][i]
+            d = self.a[i + 1][i + 1]
             delta = (a + d) ** 2 - 4 * (a * d - b * c)
 
             if delta >= 0:
@@ -181,28 +181,27 @@ class Eigen(object):
                 self.en[i + 1] = (a + d - csqrt(delta)) / 2
             return
 
-        A = [0 for _ in range((j - i) * (j - i))]
+        A = [[0 for _ in range(j - i)] for _ in range(j - i)]
         for x in range(j - i):
             for y in range(j - i):
-                A[x * (j - i) + y] = self.a[(i + x) * self.n + (i + y)]
+                A[x][y] = self.a[i + x][i + y]
 
         for _ in range(50):
             for k in range(1, j - i):
-                if abs(A[k * (j - i) + k - 1]) < 1e-9:
+                if abs(A[k][k - 1]) < 1e-9:
                     for x in range(j - i):
                         for y in range(j - i):
-                            self.a[(i + x) * self.n + (i + y)
-                                   ] = A[x * (j - i) + y]
+                            self.a[i + x][i + y] = A[x][y]
 
                     self.qr_aux(i, i + k)
                     self.qr_aux(i + k, j)
                     return False
 
             Q, R = self.qr_solve(A, j - i)
-            A = multiply(R, Q, j - i, j - i, j - i)
+            A = multiply(R, Q)
 
         for k in range(i, j):
-            self.en[k] = A[(k - i) * (j - i) + (k - i)]
+            self.en[k] = A[k - i][k - i]
 
         return False
 
@@ -226,12 +225,12 @@ class Eigen(object):
         @return: Q, R
         """
         Q = identity(n)
-        R = A[:]
+        R = [row[:] for row in A]
 
         for i in range(n - 1):
             x = []
             for j in range(i, n):
-                x.append(R[j * n + i])
+                x.append(R[j][i])
 
             u = x[:]
             u[0] = u[0] - norm(x)
@@ -245,10 +244,10 @@ class Eigen(object):
             v2 = outer(v, v)
             for j in range(len(v)):
                 for k in range(len(v)):
-                    h[(j + i) * n + k + i] -= 2 * v2[j * len(v) + k]
+                    h[j + i][k + i] -= 2 * v2[j][k]
 
-            R = multiply(h, R, n, n, n)
-            Q = multiply(Q, h, n, n, n)
+            R = multiply(h, R)
+            Q = multiply(Q, h)
 
         return Q, R
 
@@ -257,9 +256,9 @@ def test_power_eng():
     print('==========Test Power Eng==========')
     print('----------Case 1----------')
     n = 3
-    a = [-4, 14, 0,
-         -5, 13, 0,
-         -1, 0, 2]
+    a = [[-4, 14, 0],
+         [-5, 13, 0],
+         [-1, 0, 2]]
     pld = [0]
     env = [random() for _ in range(n)]
 
@@ -272,10 +271,10 @@ def test_power_eng():
 
     print('----------Case 2----------')
     n = 4
-    a = [2, 1, 0, 0,
-         1, 2, 1, 0,
-         0, 1, 2, 1,
-         0, 0, 1, 2]
+    a = [[2, 1, 0, 0],
+         [1, 2, 1, 0],
+         [0, 1, 2, 1],
+         [0, 0, 1, 2]]
     pld = [0]
     env = [random() for _ in range(n)]
     power_eng(pld, env, a, n)
@@ -287,9 +286,9 @@ def test_power_eng():
 
     print('----------Case 3----------')
     n = 3
-    a = [2, -1, 0,
-         0, 2, -1,
-         0, -1, 2]
+    a = [[2, -1, 0],
+         [0, 2, -1],
+         [0, -1, 2]]
     pld = [0]
     env = [random() for _ in range(n)]
     power_eng(pld, env, a, n)
@@ -306,9 +305,9 @@ def test_inv_power_eng():
     print('==========Test Inv Power Eng==========')
     print('----------Case 1----------')
     n = 3
-    a = [2, -1, 0,
-         -1, 2, -1,
-         0, -1, 2]
+    a = [[2, -1, 0],
+         [-1, 2, -1],
+         [0, -1, 2]]
     pld = [0]
     env = [random() for _ in range(n)]
     inv_power_eng(pld, env, a, n)
@@ -320,9 +319,9 @@ def test_inv_power_eng():
 
     print('----------Case 2----------')
     n = 3
-    a = [-4, 14, 0,
-         -5, 13, 0,
-         -1, 0, 2]
+    a = [[-4, 14, 0],
+         [-5, 13, 0],
+         [-1, 0, 2]]
     pld = [0]
     env = [random() for _ in range(n)]
     inv_power_eng(pld, env, a, n)
@@ -334,9 +333,9 @@ def test_inv_power_eng():
 
     print('----------Case 3----------')
     n = 3
-    a = [-1, 1, 0,
-         -4, 3, 0,
-         1, 0, 2]
+    a = [[-1, 1, 0],
+         [-4, 3, 0],
+         [1, 0, 2]]
     pld = [0]
     env = [random() for _ in range(n)]
     inv_power_eng(pld, env, a, n)
@@ -353,9 +352,9 @@ def test_jacobi_eng():
     print('==========Test Jacobi Eng==========')
     print('----------Case 1----------')
     n = 3
-    a = [4, 2, 2,
-         2, 5, 1,
-         2, 1, 6]
+    a = [[4, 2, 2],
+         [2, 5, 1],
+         [2, 1, 6]]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -365,10 +364,10 @@ def test_jacobi_eng():
 
     print('----------Case 2----------')
     n = 4
-    a = [1, 1, 1, 1,
-         1, 2, 3, 4,
-         1, 3, 6, 10,
-         1, 4, 10, 20]
+    a = [[1, 1, 1, 1],
+         [1, 2, 3, 4],
+         [1, 3, 6, 10],
+         [1, 4, 10, 20]]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -377,10 +376,10 @@ def test_jacobi_eng():
 
     print('----------Case 3----------')
     n = 4
-    a = [4, -30, 60, -35,
-         -30, 300, -675, 420,
-         60, -675, 1620, -1050,
-         -35, 420, -1050, 700]
+    a = [[4, -30, 60, -35],
+         [-30, 300, -675, 420],
+         [60, -675, 1620, -1050],
+         [-35, 420, -1050, 700]]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -390,9 +389,9 @@ def test_jacobi_eng():
 
     print('----------Case 4----------')
     n = 3
-    a = [3.5, -6, 5,
-         -6, 8.5, -9,
-         5, -9, 8.5]
+    a = [[3.5, -6, 5],
+         [-6, 8.5, -9],
+         [5, -9, 8.5]]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -402,9 +401,9 @@ def test_jacobi_eng():
 
     print('----------Case 5----------')
     n = 3
-    a = [6, 2, 4,
-         2, 3, 2,
-         4, 2, 6]
+    a = [[6, 2, 4],
+         [2, 3, 2],
+         [4, 2, 6]]
     env = [0 for _ in range(n)]
 
     jacobi_eng(env, a, n)
@@ -417,55 +416,55 @@ def test_gauss_hessen():
     print('==========Test Gauss Hessenberg==========')
     print('----------Case 1----------')
     n = 4
-    A = [9, 18, 9, -27,
-         18, 45, 0, -45,
-         9, 0, 126, 9,
-         -27, -45, 9, 135]
+    A = [[9, 18, 9, -27],
+         [18, 45, 0, -45],
+         [9, 0, 126, 9],
+         [-27, -45, 9, 135]]
 
     gauss_hessen(A, n)
-    output(A, n, n)
+    output(A)
     print()
 
     print('----------Case 2----------')
     n = 4
-    A = [54, 40, 10, 76,
-         47, 20, 94, 49,
-         26, 80, 94, 70,
-         3, 92, 83, 45]
+    A = [[54, 40, 10, 76],
+         [47, 20, 94, 49],
+         [26, 80, 94, 70],
+         [3, 92, 83, 45]]
 
     gauss_hessen(A, n)
-    output(A, n, n)
+    output(A)
     print()
 
     print('----------Case 3----------')
     n = 3
-    A = [-149, -50, -154,
-         537, 180, 546,
-         -27, -9, -25]
+    A = [[-149, -50, -154],
+         [537, 180, 546],
+         [-27, -9, -25]]
 
     gauss_hessen(A, n)
-    output(A, n, n)
+    output(A)
     print()
 
     print('----------Case 4----------')
     n = 3
-    A = [1, 3, 4,
-         3, 2, 1,
-         4, 1, 3]
+    A = [[1, 3, 4],
+         [3, 2, 1],
+         [4, 1, 3]]
 
     gauss_hessen(A, n)
-    output(A, n, n)
+    output(A)
     print()
 
     print('----------Case 5----------')
     n = 4
-    A = [8, 6, 10, 10,
-         9, 1, 10, 5,
-         1, 3, 1, 8,
-         10, 6, 10, 1]
+    A = [[8, 6, 10, 10],
+         [9, 1, 10, 5],
+         [1, 3, 1, 8],
+         [10, 6, 10, 1]]
 
     gauss_hessen(A, n)
-    output(A, n, n)
+    output(A)
     print()
 
 
@@ -473,12 +472,12 @@ def test_hessen_qr():
     print('==========Test QR Iteration==========')
     print('----------Case 1----------')
     n = 3
-    A = [5, -3, 2,
-         6, -4, 4,
-         4, -4, 5]
+    A = [[5, -3, 2],
+         [6, -4, 4],
+         [4, -4, 5]]
 
     gauss_hessen(A, n)
-    output(A, n, n)
+    output(A)
 
     env = [0 for _ in range(n)]
     eig = Eigen()
@@ -489,11 +488,11 @@ def test_hessen_qr():
 
     print('----------Case 2----------')
     n = 5
-    A = [5, -5/3, 2, 4, 5,
-         6, -4/3, 4, 5, 6,
-         0, 2/9, 7/3, 6, 7,
-         0, 0, 0, 3, -2,
-         0, 0, 0, 4, -1]
+    A = [[5, -5/3, 2, 4, 5],
+         [6, -4/3, 4, 5, 6],
+         [0, 2/9, 7/3, 6, 7],
+         [0, 0, 0, 3, -2],
+         [0, 0, 0, 4, -1]]
 
     env = [0 for _ in range(n)]
     eig = Eigen()
@@ -504,8 +503,8 @@ def test_hessen_qr():
 
     print('----------Case 3----------')
     n = 2
-    A = [0, -1,
-         1, 0]
+    A = [[0, -1],
+         [1, 0]]
 
     env = [0 for _ in range(n)]
     eig = Eigen()

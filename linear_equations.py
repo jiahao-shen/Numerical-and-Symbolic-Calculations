@@ -14,31 +14,28 @@ def lu(a, pivot, n):
     @param n: 矩阵维数
     @return: Boolean
     """
-    if len(a) != n * n:
-        return True
-
     for i in range(n - 1):
-        max_t = abs(a[i * n + i])
+        max_t = abs(a[i][i])
         t = i
 
         for j in range(i + 1, n):
-            if abs(a[j * n + i]) > max_t:
-                max_t = abs(a[j * n + i])
+            if abs(a[j][i]) > max_t:
+                max_t = abs(a[j][i])
                 t = j
 
         if abs(max_t) < 1e-9:
             return True
 
         for j in range(n):
-            a[i * n + j], a[t * n + j] = a[t * n + j], a[i * n + j]
+            a[i][j], a[t][j] = a[t][j], a[i][j]
 
         pivot[i], pivot[t] = pivot[t], pivot[i]
 
         for j in range(i + 1, n):
-            a[j * n + i] = a[j * n + i] / a[i * n + i]
+            a[j][i] = a[j][i] / a[i][i]
 
             for k in range(i + 1, n):
-                a[j * n + k] = a[j * n + k] - a[i * n + k] * a[j * n + i]
+                a[j][k] = a[j][k] - a[i][k] * a[j][i]
 
     return False
 
@@ -58,12 +55,12 @@ def gauss(lu, p, b, n):
 
     for i in range(n):
         for j in range(i):
-            b[i] = b[i] - lu[i * n + j] * b[j]
+            b[i] = b[i] - lu[i][j] * b[j]
 
     for i in reversed(range(n)):
         for j in reversed(range(i + 1, n)):
-            b[i] = b[i] - lu[i * n + j] * b[j]
-        b[i] = b[i] / lu[i * n + i]
+            b[i] = b[i] - lu[i][j] * b[j]
+        b[i] = b[i] / lu[i][i]
 
     return False
 
@@ -80,34 +77,34 @@ def qr(a, d, n):
     for i in range(n - 1):
         m = 0
         for j in range(i, n):
-            m += (a[j * n + i] ** 2)
-        if a[i * n + i] > 0:
+            m += (a[j][i] ** 2)
+        if a[i][i] > 0:
             m = -sqrt(m)
         else:
             m = sqrt(m)
 
         t = 0
         d[i] = m
-        a[i * n + i] -= m
+        a[i][i] -= m
 
         for j in range(i, n):
-            t += (a[j * n + i] ** 2)
+            t += (a[j][i] ** 2)
         t = sqrt(t)
 
         for j in range(i, n):
-            a[j * n + i] /= t
+            a[j][i] /= t
 
         for j in range(i + 1, n):
             for k in range(i, n):
                 t = 0
                 for l in range(i, n):
-                    t += (a[k * n + i] * a[l * n + i] * a[l * n + j])
-                temp[k] = a[k * n + j] - 2 * t
+                    t += (a[k][i] * a[l][i] * a[l][j])
+                temp[k] = a[k][j] - 2 * t
 
             for k in range(i, n):
-                a[k * n + j] = temp[k]
+                a[k][j] = temp[k]
 
-    d[n - 1] = a[(n - 1) * n + n - 1]
+    d[n - 1] = a[n - 1][n - 1]
 
 
 def householder(qr, d, b, n):
@@ -124,14 +121,14 @@ def householder(qr, d, b, n):
         for j in range(i, n):
             t = 0
             for k in range(i, n):
-                t += (qr[k * n + i] * qr[j * n + i] * b[k])
+                t += (qr[k][i] * qr[j][i] * b[k])
             temp[j] = b[j] - 2 * t
         for j in range(i, n):
             b[j] = temp[j]
 
     for i in reversed(range(0, n)):
         for j in reversed(range(i + 1, n)):
-            b[i] -= (b[j] * qr[i * n + j])
+            b[i] -= (b[j] * qr[i][j])
         b[i] /= d[i]
 
     return False
@@ -142,14 +139,14 @@ def test_lu():
 
     print('----------Case 1----------')
     n = 4
-    A = [1, 2, 3.75, 0,
-         3, 7, 1, 0,
-         2, 6, 0, 2,
-         1, 5, 5, -5]
+    A = [[1, 2, 3.75, 0],
+         [3, 7, 1, 0],
+         [2, 6, 0, 2],
+         [1, 5, 5, -5]]
     pivot = list(range(4))
 
     lu(A, pivot, n)
-    output(A, n, n)
+    output(A)
     # 3.00000E+00     7.00000E+00     1.00000E+00     0.00000E+00
     # 3.33333E-01     2.66667E+00     4.66667E+00     -5.00000E+00
     # 3.33333E-01     -1.25000E-01    4.00000E+00     -6.25000E-01
@@ -166,10 +163,10 @@ def test_gauss():
 
     print('----------Case 1----------')
     n = 4
-    A = [1, 2, 0, 0,
-         3, 7, 1, 0,
-         2, 6, 0, 2,
-         1, 5, 5, -5]
+    A = [[1, 2, 0, 0],
+         [3, 7, 1, 0],
+         [2, 6, 0, 2],
+         [1, 5, 5, -5]]
     b = [3, 11, 10, 6]
     pivot = list(range(4))
 
@@ -187,13 +184,13 @@ def test_qr():
 
     print('----------Case 1----------')
     n = 3
-    A = [12, -51, 4,
-         6, 167, -68,
-         -4, 24, -41]
+    A = [[12, -51, 4],
+         [6, 167, -68],
+         [-4, 24, -41]]
     d = [0 for _ in range(n)]
 
     qr(A, d, n)
-    output(A, n, n)
+    output(A)
     # 9.63624E-01     -2.10000E+01    1.40000E+01
     # 2.22375E-01     9.98460E-01     7.00000E+01
     # -1.48250E-01    5.54700E-02     -3.50000E+01
@@ -203,14 +200,14 @@ def test_qr():
 
     print('----------Case 2----------')
     n = 4
-    A = [5, -2, -5, -1,
-         1, 0, -3, 2,
-         0, 2, 2, -3,
-         0, 0, 1, -2]
+    A = [[5, -2, -5, -1],
+         [1, 0, -3, 2],
+         [0, 2, 2, -3],
+         [0, 0, 1, -2]]
     d = [0 for _ in range(n)]
 
     qr(A, d, n)
-    output(A, n, n)
+    output(A)
     # 9.95133E-01     1.96116E+00     5.49125E+00     5.88348E-01
     # 9.85376E-02     7.72156E-01     -1.58519E+00    2.52875E+00
     # 0.00000E+00     6.35433E-01     9.79199E-01     3.26718E+00
@@ -221,13 +218,13 @@ def test_qr():
 
     print('----------Case 3----------')
     n = 3
-    A = [0, 3, 1,
-         0, 4, -2,
-         2, 1, 1]
+    A = [[0, 3, 1],
+         [0, 4, -2],
+         [2, 1, 1]]
     d = [0 for _ in range(n)]
 
     qr(A, d, n)
-    output(A, n, n)
+    output(A)
     # -7.07107E-01    1.00000E+00     1.00000E+00
     # 0.00000E+00     9.48683E-01     1.00000E+00
     # 7.07107E-01     3.16228E-01     2.00000E+00
@@ -243,10 +240,10 @@ def test_householder():
 
     print('----------Case 1----------')
     n = 4
-    A = [1, 2, 0, 0,
-         3, 7, 1, 0,
-         2, 6, 0, 2,
-         1, 5, 5, -5]
+    A = [[1, 2, 0, 0],
+         [3, 7, 1, 0],
+         [2, 6, 0, 2],
+         [1, 5, 5, -5]]
     b = [3, 11, 10, 6]
     d = [0 for _ in range(n)]
 

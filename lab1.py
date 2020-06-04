@@ -20,7 +20,7 @@ def calculate_error(b, ans, n):
 
 def calculate_remnant(A, b, x, n):
     r = [0 for _ in range(n)]
-    Ax = multiply(A, x, n, n, 1)
+    Ax = dot(A, x)
     for i in range(n):
         r[i] = Ax[i] - b[i]
 
@@ -29,49 +29,49 @@ def calculate_remnant(A, b, x, n):
 
 
 def equation_1(n):
-    h = [0 for _ in range(n * n)]
+    h = [[0 for _ in range(n)] for _ in range(n)]
     b = [0 for _ in range(n)]
 
     for i in range(n):
         for j in range(n):
-            h[i * n + j] = 1 / (i + j + 1)
-            b[i] += h[i * n + j]
+            h[i][j] = 1 / (i + j + 1)
+            b[i] += h[i][j]
 
     return h, b
 
 
 def equation_2(n):
-    g = [0 for _ in range(n * n)]
+    g = [[0 for _ in range(n)] for _ in range(n)]
     b = [0 for _ in range(n)]
 
     for i in range(n):
-        g[i * n + n - 1] = 1
-        g[i * n + i] = 1
+        g[i][n - 1] = 1
+        g[i][i] = 1
 
         for j in range(i):
-            g[i * n + j] = -1
+            g[i][j] = -1
 
     for i in range(n):
         for j in range(n):
-            b[i] += g[i * n + j]
+            b[i] += g[i][j]
 
     return g, b
 
 
 def equation_3(n):
-    g = [0 for _ in range(n * n)]
+    g = [[0 for _ in range(n)] for _ in range(n)]
     b = [0 for _ in range(n)]
 
     for i in range(n):
-        g[i * n + n - 1] = 1
-        g[i * n + i] = 1
+        g[i][n - 1] = 1
+        g[i][i] = 1
 
         for j in range(i):
-            g[i * n + j] = -1
+            g[i][j] = -1
 
     for i in range(n):
         for j in range(n):
-            b[i] += abs(g[i * n + j])
+            b[i] += abs(g[i][j])
 
     return g, b
 

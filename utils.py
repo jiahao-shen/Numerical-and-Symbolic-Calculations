@@ -7,16 +7,15 @@
 from math import sqrt, inf
 
 
-def output(a, m, n):
+def output(a):
     """打印矩阵
     @param a: 按行优先次序存放
-    @param m: 矩阵行数
-    @param n: 矩阵列数
     @return:
     """
+    m, n = len(a), len(a[0])
     for i in range(m):
         for j in range(n):
-            print('%.5E' % a[i * n + j], end='\t')
+            print('%.5E' % a[i][j], end='\t')
         print()
 
 
@@ -41,9 +40,9 @@ def identity(n):
     @param n: 矩阵维数
     @return: Matrix
     """
-    one = [0 for _ in range(n * n)]
+    one = [[0 for _ in range(n)] for _ in range(n)]
     for i in range(n):
-        one[i * n + i] = 1
+        one[i][i] = 1
 
     return one
 
@@ -55,30 +54,44 @@ def outer(a, b):
     @return: Matrix
     """
     m, n = len(a), len(b)
-    res = [0 for _ in range(m * n)]
+    res = [[0 for _ in range(n)] for _ in range(m)]
     for i in range(m):
         for j in range(n):
-            res[i * n + j] = a[i] * b[j]
+            res[i][j] = a[i] * b[j]
     return res
 
 
-def multiply(a, b, m, p, n):
+def multiply(a, b):
     """矩阵乘法
     @param a: 矩阵A
     @param b: 矩阵B
-    @param m: 矩阵A的行
-    @param p: 矩阵A的列, 矩阵B的行
-    @param n: 矩阵B的列
     @return: Matrix
     """
-    res = [0 for _ in range(m * n)]
+    m, p, n = len(a), len(a[0]), len(b[0])
+    res = [[0 for _ in range(n)] for _ in range(m)]
 
     for i in range(m):
         for k in range(p):
-            if abs(a[i * p + k]) > 1e-9:
+            if abs(a[i][k]) > 1e-9:
                 for j in range(n):
-                    if abs(b[k * n + j]) > 1e-9:
-                        res[i * n + j] += (a[i * p + k] * b[k * n + j])
+                    if abs(b[k][j]) > 1e-9:
+                        res[i][j] += (a[i][k] * b[k][j])
+
+    return res
+
+
+def dot(a, b):
+    """矩阵向量乘法
+    @param a: 矩阵A
+    @param b: 向量b
+    @return: Vector
+    """
+    m, n = len(a), len(a[0])
+    res = [0 for _ in range(m)]
+
+    for i in range(m):
+        for j in range(n):
+            res[i] += (a[i][j] * b[j])
 
     return res
 
@@ -113,7 +126,7 @@ def test_outer():
     print('----------Case 1----------')
     m = 3
     a = [1, 2, 3]
-    output(outer(a, a), m, m)
+    output(outer(a, a))
     print()
 
     print('----------Case 2----------')
@@ -121,7 +134,7 @@ def test_outer():
     a = [2, 3, 4]
     n = 2
     b = [1, 6]
-    output(outer(a, b), m, n)
+    output(outer(a, b))
     print()
 
     print()
@@ -131,15 +144,29 @@ def test_multiply():
     print('==========Test Multiply==========')
 
     print('----------Case 1----------')
-    a = [5, 2, 4,
-         3, 8, 2,
-         6, 0, 4,
-         0, 1, 6]
-    b = [2, 4,
-         1, 3,
-         3, 2]
+    a = [[5, 2, 4],
+         [3, 8, 2],
+         [6, 0, 4],
+         [0, 1, 6]]
+    b = [[2, 4],
+         [1, 3],
+         [3, 2]]
 
-    output(multiply(a, b, 4, 3, 2), 4, 2)
+    output(multiply(a, b))
+    print()
+    print()
+
+
+def test_dot():
+    print('==========Test Dot==========')
+
+    print('----------Case 1----------')
+    a = [[1, 1, 1],
+         [1, 1, 1],
+         [1, 1, 1]]
+    b = [1, 1, 1]
+
+    print(dot(a, b))
     print()
     print()
 
@@ -148,3 +175,4 @@ if __name__ == '__main__':
     test_norm()
     test_outer()
     test_multiply()
+    test_dot()
