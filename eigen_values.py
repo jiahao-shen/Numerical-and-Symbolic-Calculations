@@ -91,12 +91,12 @@ def jacobi_eng(env, a, n):
 
         a_new = [row[:] for row in a]
 
-        a_new[p][p] = a[p][p] * (cos(theta) ** 2) + a[q][q] * (
-            sin(theta) ** 2) + 2 * a[p][q] * cos(theta) * sin(theta)
-        a_new[q][q] = a[p][p] * (sin(theta) ** 2) + a[q][q] * (
-            cos(theta) ** 2) - 2 * a[p][q] * cos(theta) * sin(theta)
-        a_new[p][q] = (a[q][q] - a[p][p]) * \
-            sin(2 * theta) / 2 + a[p][q] * cos(2 * theta)
+        a_new[p][p] = a[p][p] * (cos(theta) ** 2) + a[q][q] * \
+            (sin(theta) ** 2) + 2 * a[p][q] * cos(theta) * sin(theta)
+        a_new[q][q] = a[p][p] * (sin(theta) ** 2) + a[q][q] * \
+            (cos(theta) ** 2) - 2 * a[p][q] * cos(theta) * sin(theta)
+        a_new[p][q] = (a[q][q] - a[p][p]) * sin(2 * theta) / \
+            2 + a[p][q] * cos(2 * theta)
         a_new[q][p] = a_new[p][q]
 
         for i in range(n):

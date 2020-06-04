@@ -211,7 +211,7 @@ if __name__ == '__main__':
     main_1(*matrix_c())
     print('矩阵D')
     main_1(*matrix_d())
- 
+
     print('==================实验2==================')
     print('矩阵A')
     main_2(*matrix_a())
@@ -221,7 +221,7 @@ if __name__ == '__main__':
     main_2(*matrix_c())
     print('矩阵D')
     main_2(*matrix_d())
- 
+
     print('==================实验3==================')
     print('矩阵A')
     main_3(*matrix_a())
